@@ -1,0 +1,860 @@
+/* Desktop skin for PokeChill. Everything is scoped to html.dk, which
+   desktop/skin.js sets above 1000px wide; below that the game's own mobile
+   layout is untouched. Colours derive from the game's four theme variables. */
+
+/* --- Frame ------------------------------------------------------------------ */
+
+html.dk {
+    --dk-side: 232px;
+    --dk-top: 64px;
+    --dk-max: 1440px;
+    /* the content frame: right of the sidebar, capped and centred on wide screens */
+    --dk-w: min(var(--dk-max), calc(100vw - var(--dk-side)));
+    --dk-x: calc(var(--dk-side) + (100vw - var(--dk-side) - var(--dk-w)) / 2);
+    /* pages that have no desktop layout yet keep the game's single column */
+    --dk-col: min(760px, var(--dk-w));
+    --dk-col-x: calc(var(--dk-x) + (var(--dk-w) - var(--dk-col)) / 2);
+    --dk-line: color-mix(in oklab, var(--light1) 28%, transparent);
+    --dk-hover: color-mix(in oklab, var(--dark2), white 6%);
+    --dk-ink: #36342F;
+    --dk-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --dk-green: rgb(130, 211, 130);
+    --dk-amber: rgb(221, 168, 99);
+    --dk-red: rgb(219, 112, 112);
+}
+
+html.dk.dk-collapsed {
+    --dk-side: 72px;
+    --dk-top: 60px;
+}
+
+html.dk.dk-intro {
+    --dk-side: 0px;
+}
+
+html.dk * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklab, var(--light1) 60%, transparent) transparent;
+}
+
+/* The game's corner menu and version label are replaced by the sidebar. The
+   menu keeps its display value: the game toggles it to lock navigation. */
+html.dk #menu-button-parent {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+html.dk #game-version {
+    display: none;
+}
+
+html.dk #main-content {
+    left: var(--dk-x);
+    top: 0;
+    width: var(--dk-w);
+    box-shadow: none;
+}
+
+html.dk:not(.dk-home) #main-content {
+    background-image: none;
+    background-color: var(--dark1);
+}
+
+/* Pages */
+html.dk :is(#explore-menu, #vs-menu, #dimension-menu, #team-menu, #item-menu, #pokedex-menu,
+        #shop-menu, #training-menu, #genetics-menu, #settings-menu, #guide-menu, #dictionary-menu,
+        #custom-challenges-menu, #content-explore,
+        #pkmn-editor, #area-end, #decor-menu, #wonder-menu, #tutorial, #white-transition) {
+    left: var(--dk-col-x);
+    top: var(--dk-top);
+    width: var(--dk-col);
+    height: calc(100% - var(--dk-top));
+}
+
+html.dk :is(#explore-menu, #vs-menu, #dimension-menu, #team-menu, #item-menu, #pokedex-menu,
+        #shop-menu, #training-menu, #genetics-menu, #settings-menu, #guide-menu, #dictionary-menu,
+        #custom-challenges-menu, #content-explore, #pkmn-editor, #area-end, #decor-menu, #wonder-menu) {
+    box-shadow: 0 0 0 1px var(--dk-line);
+}
+
+/* Before the game starts there is no sidebar or top bar */
+html.dk :is(#disclaimer-menu, #starter-menu) {
+    left: var(--dk-col-x);
+    top: 0;
+    width: var(--dk-col);
+}
+
+/* Popups dim the whole content frame; the box keeps a readable width */
+html.dk #tooltipBackground {
+    left: var(--dk-x);
+    top: 0;
+    width: var(--dk-w);
+    border: 0;
+}
+
+html.dk #tooltipBox {
+    max-width: 560px;
+}
+
+/* Away progress blocks everything, the sidebar included */
+html.dk #afk-overlay {
+    left: 0;
+    top: 0;
+    width: 100vw;
+}
+
+/* Titles the top bar already shows */
+html.dk :is(#settings-menu-header, #guide-menu-header) {
+    display: none;
+}
+
+/* --- Shared pieces ------------------------------------------------------------ */
+
+html.dk :is(#dk-side, #dk-top, #dk-toasts, #dk-modal, #dk-tip),
+html.dk :is(#dk-side, #dk-top, #dk-toasts, #dk-modal, #dk-tip) * {
+    letter-spacing: 0;
+}
+
+html:not(.dk) :is(#dk-side, #dk-top, #dk-toasts, #dk-modal, #dk-tip, #dk-dimension-tab, #dk-dimension-selector),
+html.dk.dk-intro :is(#dk-side, #dk-top),
+html.dk [hidden]:is(.dk-row, .dk-group, .dk-battle, .dk-top-pill, .dk-top-help) {
+    display: none !important;
+}
+
+:where(html.dk #dk-side, html.dk #dk-top, html.dk #dk-modal) button {
+    appearance: none;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+html.dk :is(#dk-side, #dk-top, #dk-modal) button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
+.dk-kbd {
+    font-family: var(--dk-mono);
+    font-size: 10px;
+    line-height: 16px;
+    color: var(--light1);
+    border: 1px solid color-mix(in oklab, var(--light1) 40%, transparent);
+    border-radius: 4px;
+    padding: 0 5px;
+    flex: none;
+}
+
+.dk-lock {
+    color: var(--light1);
+    flex: none;
+}
+
+@keyframes dk-shake {
+    20% { transform: translateX(-4px); }
+    40% { transform: translateX(4px); }
+    60% { transform: translateX(-3px); }
+    80% { transform: translateX(2px); }
+}
+
+.dk-shake {
+    animation: dk-shake 0.3s 1;
+}
+
+/* --- Sidebar -------------------------------------------------------------------- */
+
+#dk-side {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: var(--dk-side);
+    z-index: 900;
+    background: var(--dark2);
+    border-right: 1px solid var(--dk-line);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px 12px 14px;
+    color: var(--light2);
+}
+
+.dk-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 8px;
+    flex: none;
+}
+
+.dk-ball {
+    position: relative;
+    width: 28px;
+    height: 28px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--dark1);
+    box-shadow: 0 0 0 2px var(--light1);
+    flex: none;
+}
+
+.dk-ball i {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 50%;
+    background: var(--dk-red);
+}
+
+.dk-ball b {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 12px;
+    height: 4px;
+    background: var(--dark2);
+}
+
+.dk-ball u {
+    position: absolute;
+    left: 9px;
+    top: 9px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background: var(--light2);
+    box-shadow: 0 0 0 2px var(--dark2);
+}
+
+.dk-brand-name {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+/* Battle card: enemy HP and who is still standing */
+.dk-battle {
+    --dk-level: var(--dk-green);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: none;
+    width: 100%;
+    border-radius: 14px;
+    background: var(--dark1) !important;
+    padding: 10px 12px;
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--dk-green) 45%, transparent);
+}
+
+.dk-battle[data-level="mid"] { --dk-level: var(--dk-amber); }
+.dk-battle[data-level="low"] { --dk-level: var(--dk-red); }
+
+.dk-battle-tag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--dk-green);
+}
+
+.dk-battle-tag i {
+    width: 7px;
+    height: 7px;
+    border-radius: 4px;
+    background: var(--dk-green);
+    box-shadow: 0 0 8px var(--dk-green);
+}
+
+.dk-battle-area {
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dk-battle-hp {
+    height: 4px;
+    border-radius: 2px;
+    overflow: hidden;
+    background: color-mix(in oklab, var(--light1) 25%, transparent);
+}
+
+.dk-battle-hp i {
+    display: block;
+    height: 100%;
+    background: var(--dk-level);
+    transition: width 0.2s;
+}
+
+.dk-battle-team {
+    display: flex;
+    gap: 4px;
+}
+
+.dk-battle-team i {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--dk-red);
+}
+
+.dk-battle-team i.dk-out {
+    background: color-mix(in oklab, var(--light1) 25%, transparent);
+}
+
+.dk-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 0 -6px;
+    padding: 0 6px;
+}
+
+.dk-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.dk-group-title {
+    font-size: 10px;
+    letter-spacing: 0.14em !important;
+    color: var(--light1);
+    padding: 0 10px 4px;
+}
+
+.dk-row {
+    height: 33px;
+    width: 100%;
+    flex: none;
+    border-radius: 10px;
+    padding: 0 10px !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+.dk-row:hover {
+    background: var(--dk-hover) !important;
+}
+
+.dk-ico {
+    width: 18px;
+    height: 18px;
+    image-rendering: pixelated;
+    flex: none;
+}
+
+.dk-label {
+    flex: 1;
+    min-width: 0;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dk-row.dk-on,
+.dk-row.dk-on:hover {
+    background: var(--light2) !important;
+    color: var(--dark1) !important;
+}
+
+.dk-row.dk-on .dk-label {
+    font-weight: 800;
+}
+
+.dk-row.dk-on .dk-kbd {
+    color: color-mix(in oklab, var(--dark1) 70%, transparent);
+    border-color: color-mix(in oklab, var(--dark1) 40%, transparent);
+}
+
+.dk-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: #FF4671;
+    flex: none;
+}
+
+.dk-idle {
+    font-size: 10px;
+    color: var(--light1);
+    flex: none;
+}
+
+.dk-row .dk-lock,
+.dk-row .dk-idle {
+    display: none;
+}
+
+.dk-row.dk-locked > :not(.dk-lock),
+.dk-row.dk-is-idle > * {
+    opacity: 0.45;
+}
+
+.dk-row.dk-locked .dk-lock { display: block; }
+.dk-row.dk-locked .dk-kbd,
+.dk-row.dk-locked .dk-dot,
+.dk-row.dk-is-idle .dk-kbd { display: none; }
+.dk-row.dk-is-idle .dk-idle { display: block; }
+
+/* A flow the game wants finished first (picking a Pokémon, the pre-battle team…) */
+html.dk-flow #dk-side .dk-groups,
+html.dk-flow #dk-side .dk-brand,
+html.dk-flow #dk-side .dk-battle {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.dk-hint {
+    margin: 2px 0 6px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: var(--dark1);
+    box-shadow: inset 0 0 0 1px var(--dk-line);
+    font-size: 12px;
+    line-height: 1.45;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dk-hint-link {
+    color: var(--accent) !important;
+    font-size: 12px !important;
+    align-self: flex-start;
+}
+
+.dk-hint-link:hover {
+    color: var(--light2) !important;
+}
+
+.dk-foot {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 4px;
+    flex: none;
+}
+
+.dk-money {
+    display: flex;
+    gap: 6px;
+}
+
+.dk-pill {
+    flex: 1;
+    min-width: 0;
+    height: 30px;
+    border-radius: 15px;
+    background: var(--dark1);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 10px;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    cursor: help;
+}
+
+.dk-pill img {
+    width: 16px;
+    height: 16px;
+    image-rendering: pixelated;
+    pointer-events: none;
+}
+
+.dk-pill span {
+    pointer-events: none;
+}
+
+.dk-foot-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.dk-foot-btn {
+    flex: 1;
+    height: 30px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--light1) !important;
+    background: var(--dark1) !important;
+}
+
+.dk-foot-btn:hover {
+    color: var(--light2) !important;
+}
+
+.dk-version {
+    font-family: var(--dk-mono);
+    font-size: 10px;
+    color: var(--light1);
+    padding: 0 6px;
+}
+
+/* Collapsed: icons only, labels on hover */
+html.dk-collapsed #dk-side {
+    padding: 16px 12px 12px;
+    align-items: center;
+}
+
+html.dk-collapsed .dk-brand {
+    padding: 0;
+}
+
+html.dk-collapsed :is(.dk-brand-name, .dk-label, .dk-row .dk-kbd, .dk-idle, .dk-battle-tag span,
+        .dk-battle-area, .dk-battle-hp, .dk-battle-team, .dk-money, .dk-version) {
+    display: none !important;
+}
+
+html.dk-collapsed .dk-groups {
+    width: 100%;
+    gap: 8px;
+    align-items: center;
+}
+
+html.dk-collapsed .dk-group {
+    width: 48px;
+    gap: 4px;
+}
+
+html.dk-collapsed .dk-group-title {
+    font-size: 0;
+    padding: 0;
+    height: 1px;
+    margin: 2px 8px 4px;
+    background: var(--dk-line);
+}
+
+html.dk-collapsed .dk-group:first-child .dk-group-title {
+    display: none;
+}
+
+html.dk-collapsed .dk-row {
+    height: 36px;
+    padding: 0 !important;
+    justify-content: center;
+}
+
+html.dk-collapsed .dk-ico {
+    width: 22px;
+    height: 22px;
+}
+
+html.dk-collapsed .dk-row .dk-lock,
+html.dk-collapsed .dk-row .dk-dot {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+
+html.dk-collapsed .dk-battle {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 22px;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none;
+    background: conic-gradient(var(--dk-level) var(--dk-hp, 0%), color-mix(in oklab, var(--light1) 25%, transparent) 0) !important;
+}
+
+html.dk-collapsed .dk-battle-tag {
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+    background: var(--dark1);
+    justify-content: center;
+}
+
+html.dk-collapsed .dk-foot {
+    padding: 0;
+    width: 48px;
+}
+
+html.dk-collapsed .dk-foot-actions {
+    flex-direction: column;
+}
+
+html.dk-collapsed .dk-foot-btn {
+    flex: none;
+    width: 48px;
+    height: 34px;
+}
+
+/* full screen stays in the expanded footer; the rows need the height */
+html.dk-collapsed #dk-full {
+    display: none;
+}
+
+html.dk-collapsed #dk-fold svg {
+    transform: scaleX(-1);
+}
+
+#dk-tip {
+    position: fixed;
+    z-index: 950;
+    transform: translateY(-50%);
+    display: none;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 10px;
+    border-radius: 9px;
+    background: var(--light2);
+    color: var(--dk-ink);
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+}
+
+#dk-tip.dk-tip-on {
+    display: flex;
+}
+
+#dk-tip .dk-kbd,
+#dk-tip .dk-lock {
+    color: color-mix(in oklab, var(--dk-ink) 70%, transparent);
+    border-color: color-mix(in oklab, var(--dk-ink) 40%, transparent);
+}
+
+/* --- Top bar ------------------------------------------------------------------ */
+
+#dk-top {
+    position: fixed;
+    left: var(--dk-x);
+    top: 0;
+    width: var(--dk-w);
+    height: var(--dk-top);
+    z-index: 140;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 24px;
+    background: var(--dark1);
+    border-bottom: 1px solid var(--dk-line);
+    color: var(--light2);
+}
+
+html.dk-home #dk-top {
+    display: none;
+}
+
+.dk-top-title {
+    font-size: 22px;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dk-top-slot {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.dk-top-pill {
+    height: 32px;
+    padding: 0 12px !important;
+    border-radius: 16px;
+    background: var(--dark2) !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px !important;
+    color: var(--light1) !important;
+    flex: none;
+}
+
+.dk-top-pill i {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--accent);
+}
+
+.dk-top-pill b {
+    color: var(--light2);
+    font-variant-numeric: tabular-nums;
+}
+
+.dk-top-help {
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+    background: var(--dark2) !important;
+    color: var(--light1) !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+    flex: none;
+}
+
+.dk-top-help:hover,
+.dk-top-pill:hover {
+    background: var(--dk-hover) !important;
+}
+
+/* --- Toasts ---------------------------------------------------------------------- */
+
+#dk-toasts {
+    position: fixed;
+    left: var(--dk-x);
+    width: var(--dk-w);
+    bottom: 24px;
+    z-index: 1200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+}
+
+@keyframes dk-toast-in {
+    from { opacity: 0; transform: translateY(8px); }
+}
+
+.dk-toast {
+    height: 48px;
+    max-width: min(520px, 90%);
+    border-radius: 14px;
+    background: var(--dark2);
+    box-shadow: inset 0 0 0 1.5px var(--light1), 0 10px 30px rgba(0, 0, 0, 0.4);
+    color: var(--light2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 16px;
+    font-size: 14px;
+    animation: dk-toast-in 0.18s 1;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.dk-toast i {
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background: var(--light1);
+    flex: none;
+}
+
+.dk-toast-warn { box-shadow: inset 0 0 0 1.5px rgb(206, 83, 83), 0 10px 30px rgba(0, 0, 0, 0.4); }
+.dk-toast-warn i { background: rgb(206, 83, 83); }
+.dk-toast-shiny { box-shadow: inset 0 0 0 1.5px #FF4671, 0 10px 30px rgba(0, 0, 0, 0.4); }
+.dk-toast-shiny i { background: #FF4671; }
+
+.dk-toast-ok {
+    background: var(--light2);
+    color: var(--dk-ink);
+    font-weight: 700;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.dk-toast-ok i { background: rgb(90, 170, 90); }
+
+.dk-toast-out {
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+/* --- Shortcut list ------------------------------------------------------------------ */
+
+#dk-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1300;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dk-card {
+    width: min(460px, calc(100vw - 48px));
+    border-radius: 22px;
+    background: var(--dark2);
+    color: var(--light2);
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+.dk-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.dk-card-close {
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    background: var(--dark1) !important;
+    color: var(--light1) !important;
+    font-size: 12px !important;
+    text-align: center !important;
+}
+
+.dk-key-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+}
+
+.dk-key-keys {
+    min-width: 62px;
+    display: flex;
+    gap: 4px;
+}
+
+.dk-key-keys .dk-kbd {
+    font-size: 11px;
+    line-height: 18px;
+    padding: 0 7px;
+    border-radius: 5px;
+    background: var(--dark1);
+    border-bottom-width: 2px;
+    color: var(--light2);
+}
+
+/* --- Mega Dimension as a VS tab ------------------------------------------------------- */
+
+.dk-dimension-tab {
+    gap: 6px;
+}
+
+.dk-dimension-tab.dk-tab-locked {
+    color: var(--light1) !important;
+}
+
+.dk-dimension-tab.dk-tab-on {
+    background: var(--light2) !important;
+    color: var(--dk-ink) !important;
+    font-weight: 700;
+}
