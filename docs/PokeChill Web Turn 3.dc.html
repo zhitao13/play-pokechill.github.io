@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Winky+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+html{background:#1a1916}
+body{margin:0;background:#1a1916;width:max-content;min-width:100%;--dark1:#36342F;--dark2:#444138;--light1:#94886B;--light2:#ECDEB7;--accent:#ffe15e;font-family:'Winky Sans',system-ui,sans-serif;color:var(--light2);-webkit-font-smoothing:antialiased}
+a{color:var(--accent)} a:hover{color:var(--light2)}
+</style>
+</helmet>
+<div style="padding:64px 72px 40px;display:flex;flex-direction:column;gap:10px;max-width:1100px">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:#94886B">TURN 3 · DESKTOP WEB · <a href="PokeChill Web Turn 2.dc.html">← turn 2</a></div>
+  <div style="font-size:40px;font-weight:800;color:#ECDEB7">PokeChill · Web UI — turn 3</div>
+  <div style="font-size:15px;line-height:1.6;color:#b9ad8f;text-wrap:pretty">The rest of the screens, built from the components in turns 1–2. Dungeons uses the Wild layout from turn 1 with the green #58644b category color and no capture badge, so it isn't drawn again.</div>
+</div>
+
+<div style="padding:0 72px 72px;display:flex;flex-wrap:wrap;gap:56px;align-items:flex-start">
+  <div id="3a" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">3a</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Travel · Events tab (banner, Novice / Elite, raid tags)</div></div>
+    <div data-screen-label="3a Events" style="width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="travel" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="height:64px;flex:none;display:flex;align-items:center;gap:16px;padding:0 24px;border-bottom:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+          <div style="font-size:22px;font-weight:800">Travel</div>
+          <div style="padding:3px;border-radius:12px;background:color-mix(in oklab, var(--dark1), black 10%);display:flex;gap:3px">
+            <div style="height:32px;padding:0 16px;border-radius:9px;color:var(--light1);display:flex;align-items:center;font-size:13px">Wild Areas</div>
+            <div style="height:32px;padding:0 16px;border-radius:9px;color:var(--light1);display:flex;align-items:center;font-size:13px">Dungeons</div>
+            <div style="height:32px;padding:0 16px;border-radius:9px;background:#91718B;color:#fff;display:flex;align-items:center;font-size:13px;font-weight:700">Events</div>
+          </div>
+          <div style="flex:1"></div>
+          <div style="height:32px;padding:0 12px;border-radius:16px;background:var(--dark2);display:flex;align-items:center;gap:6px;font-size:12px;color:var(--light1)">Event <b style="color:var(--light2)">3/6</b> · ends in <b style="color:var(--light2);font-variant-numeric:tabular-nums">2d 09:14</b></div>
+          <div style="width:36px;height:36px;border-radius:18px;background:var(--dark2);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--light1)">?</div>
+        </div>
+        <div style="padding:20px 24px;display:flex;flex-direction:column;gap:16px">
+          <div style="position:relative;height:150px;border-radius:22px;overflow:hidden;background:repeating-linear-gradient(135deg, color-mix(in oklab, #91718B 22%, transparent) 0 10px, transparent 10px 20px), color-mix(in oklab, var(--dark1), #3a2a3a 40%)">
+            <div style="position:absolute;inset:0;background:linear-gradient(90deg, var(--dark1) 0%, transparent 60%)"></div>
+            <div style="position:absolute;left:24px;top:26px;display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;letter-spacing:.14em;color:var(--light1)">#event-banner</span><span style="font-size:32px;font-weight:800">Primeval Wilds</span></div>
+            <div style="position:absolute;left:24px;bottom:18px;padding:3px;border-radius:11px;background:rgba(0,0,0,.35);display:flex;gap:3px">
+              <div style="height:30px;padding:0 16px;border-radius:8px;background:var(--light2);color:#36342F;display:flex;align-items:center;font-size:13px;font-weight:800">Novice</div>
+              <div style="height:30px;padding:0 16px;border-radius:8px;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--light1)">Elite<svg width="9" height="10" viewBox="0 0 9 10"><rect x="0.5" y="4" width="8" height="5.5" rx="1.2" fill="var(--light1)"></rect><path d="M2.3 4V2.8a2.2 2.2 0 0 1 4.4 0V4" fill="none" stroke="var(--light1)" stroke-width="1.3"></path></svg></div>
+            </div>
+            <div style="position:absolute;right:20px;top:14px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--light1)">event background</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px">
+            <sc-for list="{{ eventTickets }}" as="tk" hint-placeholder-count="6">
+              <div style="position:relative;height:140px;border-radius:18px;background:var(--dark2);display:grid;grid-template-columns:minmax(0,1fr) 170px;overflow:hidden">
+                <div style="padding:14px 14px 12px 18px;display:flex;flex-direction:column;gap:6px;min-width:0">
+                  <div style="display:flex;align-items:center;gap:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--light1)">{{ tk.no }}</span><span style="font-size:10px;font-weight:700;color:{{ tk.tagFg }};background:{{ tk.tagBg }};padding:2px 7px;border-radius:6px">{{ tk.tag }}</span></div>
+                  <div style="font-size:21px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ tk.name }}</div>
+                  <div style="font-size:12px;color:var(--light1)">{{ tk.sub }}</div>
+                  <div style="margin-top:auto;width:120px;height:14px;opacity:.5;background:repeating-linear-gradient(90deg, var(--light2) 0 2px, transparent 2px 4px, var(--light2) 4px 5px, transparent 5px 8px)"></div>
+                </div>
+                <div style="background:repeating-linear-gradient(135deg, color-mix(in oklab, #91718B 20%, transparent) 0 6px, transparent 6px 12px), color-mix(in oklab, var(--dark1), black 10%);border-left:2px dashed var(--dark1)"></div>
+                <sc-if value="{{ tk.locked }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;background:color-mix(in oklab, var(--dark1) 72%, transparent);display:flex;align-items:center;justify-content:space-between;padding:0 22px;gap:12px"><div style="font-size:13px;line-height:1.45;max-width:280px">{{ tk.cond }}</div><div style="transform:rotate(-10deg);border:2.5px solid rgb(219,112,112);color:rgb(230,130,130);border-radius:8px;padding:5px 12px;font-size:17px;font-weight:800;letter-spacing:.12em">LOCKED</div></div></sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="3b" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">3b</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Training menu · subject picked, choose a course</div></div>
+    <div data-screen-label="3b Training menu" style="width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="training" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="height:64px;flex:none;display:flex;align-items:center;gap:14px;padding:0 24px;border-bottom:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+          <div style="font-size:22px;font-weight:800">Training</div><div style="flex:1"></div>
+          <div style="width:36px;height:36px;border-radius:18px;background:var(--dark2);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--light1)">?</div>
+        </div>
+        <div style="flex:1;display:grid;grid-template-columns:460px minmax(0,1fr);gap:24px;padding:24px">
+          <div style="border-radius:24px;background:repeating-linear-gradient(90deg, color-mix(in oklab, var(--light1) 10%, transparent) 0 2px, transparent 2px 40px), var(--dark2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px">
+            <div style="display:flex;align-items:flex-end;gap:40px">
+              <div style="width:160px;height:160px;border-radius:14px;border:1px dashed color-mix(in oklab, var(--light1) 55%, transparent);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--light1)">#training-sprite-div</div>
+              <div style="width:80px;height:150px;border-radius:30px 30px 14px 14px;border:1px dashed color-mix(in oklab, var(--light1) 55%, transparent);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--light1)">sack</div>
+            </div>
+            <div style="font-size:22px;font-weight:800">Pikachu <span style="font-size:14px;color:var(--light1)">Lv 42</span></div>
+            <div style="height:40px;padding:0 16px;border-radius:11px;background:var(--dark1);display:flex;align-items:center;font-size:13px">Change Pokémon…</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="font-size:14px;font-weight:800">Courses · #training-list</div>
+            <sc-for list="{{ trainings }}" as="t" hint-placeholder-count="5">
+              <div style="height:92px;border-radius:18px;background:var(--dark2);border:1.5px solid {{ t.border }};display:flex;align-items:center;gap:16px;padding:0 20px;opacity:{{ t.op }};cursor:pointer">
+                <div style="width:52px;height:52px;border-radius:14px;background:{{ t.tint }}"></div>
+                <div style="flex:1;display:flex;flex-direction:column;gap:4px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:17px;font-weight:800">{{ t.n }}</span><span style="color:{{ t.c }};letter-spacing:.08em">{{ t.d }}</span></div><span style="font-size:12px;color:var(--light1)">{{ t.desc }}</span></div>
+                <sc-if value="{{ t.locked }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:rgb(230,140,140);max-width:220px;text-align:right">{{ t.why }}</span></sc-if>
+                <sc-if value="{{ t.open }}" hint-placeholder-val="{{ true }}"><div style="height:40px;padding:0 16px;border-radius:11px;background:var(--light2);color:#36342F;display:flex;align-items:center;font-size:13px;font-weight:800">Start</div></sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="3c" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">3c</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Genetics · host + sample chosen, before start</div></div>
+    <div data-screen-label="3c Genetics" style="width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="genetics" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="height:64px;flex:none;display:flex;align-items:center;gap:14px;padding:0 24px;border-bottom:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+          <div style="font-size:22px;font-weight:800">Genetics</div><div style="flex:1"></div>
+          <div style="width:36px;height:36px;border-radius:18px;background:var(--dark2);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--light1)">?</div>
+        </div>
+        <div style="flex:1;display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:24px;padding:24px">
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <div style="flex:1;border-radius:24px;background:var(--dark2);display:flex;align-items:center;justify-content:space-around;padding:24px">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:10px"><span style="font-size:12px;letter-spacing:.14em;color:var(--light1)">HOST · #genetics-host</span><div style="width:200px;height:240px;border-radius:100px 100px 24px 24px;border:2px solid color-mix(in oklab, #7ed0f0 60%, transparent);background:color-mix(in oklab, #7ed0f0 10%, var(--dark1));display:flex;align-items:center;justify-content:center"><div style="width:120px;height:120px;border-radius:12px;border:1px dashed var(--light1)"></div></div><span style="font-size:18px;font-weight:800">Dragonite <span style="font-size:12px;color:var(--light1)">Lv 60</span></span><span style="font-size:10px;font-weight:800;background:#A33EA1;color:#fff;padding:2px 6px;border-radius:5px">PKRS</span></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--light1)"><span style="font-size:36px">←</span><span style="font-size:11px">inherits from</span></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:10px"><span style="font-size:12px;letter-spacing:.14em;color:var(--light1)">SAMPLE · #genetics-sample</span><div style="width:200px;height:240px;border-radius:100px 100px 24px 24px;border:2px solid color-mix(in oklab, #7ed0f0 60%, transparent);background:color-mix(in oklab, #7ed0f0 10%, var(--dark1));display:flex;align-items:center;justify-content:center"><div style="width:120px;height:120px;border-radius:12px;border:1px dashed var(--light1)"></div></div><span style="font-size:18px;font-weight:800">Dratini <span style="font-size:12px;color:var(--light1)">Lv 35</span></span><span style="font-size:10px;color:var(--light1)">click either pod to change</span></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px">
+              <div style="border-radius:16px;background:var(--dark2);padding:14px 16px;display:flex;flex-direction:column;gap:8px"><div style="display:flex;justify-content:space-between;font-size:13px"><span>Compatibility</span><b>4 / 5</b></div><div style="display:flex;gap:4px"><span style="flex:1;height:10px;border-radius:3px;background:#7ed0f0"></span><span style="flex:1;height:10px;border-radius:3px;background:#7ed0f0"></span><span style="flex:1;height:10px;border-radius:3px;background:#7ed0f0"></span><span style="flex:1;height:10px;border-radius:3px;background:#7ed0f0"></span><span style="flex:1;height:10px;border-radius:3px;background:color-mix(in oklab, var(--light1) 25%, transparent)"></span></div></div>
+              <div style="border-radius:16px;background:var(--dark2);padding:14px 16px;display:flex;flex-direction:column;gap:8px"><div style="display:flex;justify-content:space-between;font-size:13px"><span>Power Cost</span><b style="color:rgb(221,168,99)">High</b></div><div style="height:10px;border-radius:5px;background:var(--dark1);overflow:hidden"><div style="width:82%;height:100%;background:rgb(221,168,99)"></div></div></div>
+            </div>
+          </div>
+          <div style="border-radius:24px;background:var(--dark2);padding:20px;display:flex;flex-direction:column;gap:12px">
+            <div style="font-size:15px;font-weight:800">Outcome</div>
+            <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--light1)">Time to finish</span><b>6h 00m</b></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--light1)">Shiny mutation</span><b>2.5%</b></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--light1)">Inherit a sample move</span><b>40%</b></div>
+            <div style="font-size:12px;color:var(--light1);margin-top:4px">IV inheritance</div>
+            <sc-for list="{{ ivInherit }}" as="s" hint-placeholder-count="6"><div style="display:grid;grid-template-columns:36px minmax(0,1fr) 40px;gap:10px;align-items:center"><span style="font-size:12px;color:var(--light1)">{{ s.k }}</span><div style="height:8px;border-radius:4px;background:var(--dark1);overflow:hidden"><div style="height:100%;width:{{ s.p }}%;background:#7ed0f0"></div></div><span style="font-size:12px;text-align:right">{{ s.p }}%</span></div></sc-for>
+            <div style="border-radius:12px;background:color-mix(in oklab, rgb(221,168,99) 16%, var(--dark1));border:1px solid rgb(221,168,99);padding:10px 12px;font-size:12px;line-height:1.45">Power cost is high: only 5 of 6 IVs will be inherited.</div>
+            <div style="border-radius:12px;background:color-mix(in oklab, #A33EA1 16%, var(--dark1));border:1px solid #A33EA1;padding:10px 12px;font-size:12px;line-height:1.45">Host has Pokérus: compatibility +1.</div>
+            <div style="height:40px;border-radius:11px;border:1.5px dashed var(--light1);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--light1)">+ Genetic item (optional)</div>
+            <div style="margin-top:auto;height:50px;border-radius:14px;background:var(--accent);color:#36342F;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;box-shadow:0 4px 0 color-mix(in oklab, var(--accent), black 35%)">Start · #genetics-start</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="3d" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">3d</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Dictionary · Moves list with the inspector</div></div>
+    <div data-screen-label="3d Dictionary" style="width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="dict" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="height:64px;flex:none;display:flex;align-items:center;gap:14px;padding:0 24px;border-bottom:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+          <div style="font-size:22px;font-weight:800">Dictionary</div>
+          <div style="padding:3px;border-radius:12px;background:color-mix(in oklab, var(--dark1), black 10%);display:flex;gap:3px">
+            <div style="height:32px;padding:0 14px;border-radius:9px;color:var(--light1);display:flex;align-items:center;font-size:13px">Pokémon</div>
+            <div style="height:32px;padding:0 14px;border-radius:9px;color:var(--light1);display:flex;align-items:center;font-size:13px">Abilities</div>
+            <div style="height:32px;padding:0 14px;border-radius:9px;background:var(--light2);color:#36342F;display:flex;align-items:center;font-size:13px;font-weight:700">Moves</div>
+            <div style="height:32px;padding:0 14px;border-radius:9px;color:var(--light1);display:flex;align-items:center;font-size:13px">Items</div>
+          </div>
+          <div style="width:360px;height:40px;border-radius:12px;background:var(--dark2);display:flex;align-items:center;gap:8px;padding:0 12px;font-size:13px;color:var(--light1)">⌕ Search moves<span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;border:1px solid color-mix(in oklab, var(--light1) 45%, transparent);border-radius:4px;padding:0 5px">/</span></div>
+        </div>
+        <div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 380px">
+          <div style="padding:14px 24px;display:flex;flex-direction:column;gap:4px">
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) 110px 90px 70px;gap:12px;padding:0 14px 8px;font-size:11px;color:var(--light1);letter-spacing:.08em"><span>MOVE · 417</span><span>TYPE</span><span>CATEGORY</span><span style="text-align:right">POWER</span></div>
+            <sc-for list="{{ dictMoves }}" as="m" hint-placeholder-count="14">
+              <div style="height:46px;border-radius:11px;background:{{ m.bg }};border:1.5px solid {{ m.border }};display:grid;grid-template-columns:minmax(0,1fr) 110px 90px 70px;gap:12px;align-items:center;padding:0 14px;cursor:pointer" style-hover="background:var(--dark2)">
+                <span style="font-size:14px;font-weight:700">{{ m.n }}</span>
+                <span style="display:flex;align-items:center;gap:6px;font-size:12px"><span style="width:10px;height:10px;border-radius:5px;background:{{ m.c }}"></span>{{ m.t }}</span>
+                <span style="font-size:12px;color:var(--light1)">{{ m.cat }}</span>
+                <span style="font-size:13px;text-align:right;font-variant-numeric:tabular-nums">{{ m.p }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="border-left:1px solid color-mix(in oklab, var(--light1) 28%, transparent);background:var(--dark2);padding:16px 18px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:11px;letter-spacing:.14em;color:var(--light1)">INSPECT · MOVE</span><div style="width:30px;height:30px;border-radius:15px;background:var(--dark1);display:flex;align-items:center;justify-content:center;color:var(--light1);font-size:12px">✕</div></div>
+            <div style="border-radius:16px;padding:16px;background:color-mix(in oklab, #6390F0 16%, var(--dark1));border:1.5px solid #6390F0;display:flex;flex-direction:column;gap:6px"><div style="display:flex;gap:6px"><span style="font-size:11px;font-weight:800;color:#fff;background:#6390F0;padding:2px 8px;border-radius:6px">Water</span><span style="font-size:11px;background:rgba(0,0,0,.3);padding:2px 8px;border-radius:6px">Special</span></div><span style="font-size:26px;font-weight:800">Hydro Pump</span></div>
+            <div style="font-family:system-ui,sans-serif;font-size:14px;line-height:1.55">A powerful blast of water. Power 110.</div>
+            <div style="font-size:12px;color:var(--light1)">Learned by (in your box)</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ six }}" as="n" hint-placeholder-count="6"><div style="width:48px;height:48px;border-radius:11px;background:color-mix(in oklab, #6390F0 18%, var(--dark1))"></div></sc-for></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="padding:0 72px 96px;display:flex;flex-wrap:wrap;gap:56px;align-items:flex-start">
+  <div id="3e" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">3e</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Guide · 15 articles, one open in the inspector</div></div>
+    <div data-screen-label="3e Guide" style="width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="guide" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="height:64px;flex:none;display:flex;align-items:center;padding:0 24px;border-bottom:1px solid color-mix(in oklab, var(--light1) 28%, transparent)"><div style="font-size:22px;font-weight:800">Guide</div></div>
+        <div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 420px">
+          <div style="padding:20px 24px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:120px;gap:12px;align-content:start">
+            <sc-for list="{{ guides }}" as="g" hint-placeholder-count="15">
+              <div style="border-radius:18px;background:var(--dark2);padding:14px 16px;display:flex;gap:14px;align-items:center;cursor:pointer" style-hover="background:color-mix(in oklab, var(--dark2), white 6%)">
+                <div style="width:56px;height:56px;flex:none;border-radius:12px;background:repeating-conic-gradient(color-mix(in oklab, var(--light1) 35%, transparent) 0 25%, transparent 0 50%) 0 0/8px 8px"></div>
+                <div style="display:flex;flex-direction:column;gap:4px;min-width:0"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:{{ g.gc }}">{{ g.no }} · {{ g.grp }}</span><span style="font-size:16px;font-weight:800">{{ g.n }}</span></div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="border-left:1px solid color-mix(in oklab, var(--light1) 28%, transparent);background:var(--dark2);padding:18px 22px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:11px;letter-spacing:.14em;color:var(--light1)">GUIDE · 02</span><div style="width:30px;height:30px;border-radius:15px;background:var(--dark1);display:flex;align-items:center;justify-content:center;color:var(--light1);font-size:12px">✕</div></div>
+            <div style="font-size:26px;font-weight:800">Stats</div>
+            <div style="font-family:system-ui,sans-serif;font-size:14px;line-height:1.6;text-wrap:pretty">Each Pokémon has six stats. Base stats come from the species; IVs (0–6) are individual and can be raised through training and genetics.</div>
+            <sc-for list="{{ stats }}" as="s" hint-placeholder-count="6"><div style="height:40px;border-radius:10px;background:var(--dark1);display:flex;align-items:center;gap:12px;padding:0 12px"><span style="width:22px;height:22px;border-radius:5px;background:repeating-conic-gradient(color-mix(in oklab, var(--light1) 40%, transparent) 0 25%, transparent 0 50%) 0 0/6px 6px"></span><span style="font-size:13px;font-weight:700;width:40px">{{ s.k }}</span><span style="font-size:12px;color:var(--light1)">stat icon from the game</span></div></sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="3f" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">3f</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Settings</div></div>
+    <div data-screen-label="3f Settings" style="width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="settings" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="height:64px;flex:none;display:flex;align-items:center;padding:0 24px;border-bottom:1px solid color-mix(in oklab, var(--light1) 28%, transparent)"><div style="font-size:22px;font-weight:800">Settings</div></div>
+        <div style="padding:24px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-content:start;max-width:1100px">
+          <div style="border-radius:20px;background:var(--dark2);padding:18px;display:flex;flex-direction:column;gap:10px">
+            <div style="font-size:15px;font-weight:800">Save data</div>
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px"><div style="height:44px;border-radius:11px;background:var(--light2);color:#36342F;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800">Export Data</div><div style="height:44px;border-radius:11px;background:var(--dark1);display:flex;align-items:center;justify-content:center;font-size:13px">Import Data</div><div style="height:44px;border-radius:11px;background:var(--dark1);display:flex;align-items:center;justify-content:center;font-size:13px">Data to Text</div></div>
+            <div style="font-size:11px;color:var(--light1)">Press S anywhere to save.</div>
+          </div>
+          <div style="border-radius:20px;background:var(--dark2);padding:18px;display:flex;flex-direction:column;gap:10px">
+            <div style="font-size:15px;font-weight:800">Theme · #settings-theme</div>
+            <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+              <sc-for list="{{ themes }}" as="t" hint-placeholder-count="8"><div style="border-radius:11px;background:var(--dark1);padding:7px;display:flex;flex-direction:column;gap:5px;box-shadow:{{ t.ring }};cursor:pointer"><div style="display:flex;height:22px;border-radius:6px;overflow:hidden"><span style="flex:1;background:{{ t.a }}"></span><span style="flex:1;background:{{ t.b }}"></span><span style="flex:1;background:{{ t.c }}"></span><span style="flex:1;background:{{ t.d }}"></span></div><span style="font-size:11px;text-align:center">{{ t.n }}</span></div></sc-for>
+            </div>
+            <div style="font-size:11px;color:var(--light1)">Halloween applies itself during the season and isn't in the picker.</div>
+          </div>
+          <div style="border-radius:20px;background:var(--dark2);padding:18px;display:flex;flex-direction:column;gap:12px">
+            <div style="font-size:15px;font-weight:800">Gameplay</div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:13px"><span style="flex:1">Hide non-new Pokémon in the battle summary</span><div style="width:40px;height:24px;border-radius:12px;background:var(--accent);position:relative"><div style="position:absolute;right:3px;top:3px;width:18px;height:18px;border-radius:9px;background:#36342F"></div></div></div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:13px"><span style="flex:1">Sustract 1 to current Wild Area rotation <span style="color:var(--light1)">?</span></span><div style="width:40px;height:24px;border-radius:12px;background:var(--dark1);position:relative"><div style="position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:9px;background:var(--light1)"></div></div></div>
+            <div style="height:40px;border-radius:11px;background:var(--dark1);display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:13px">Game modifiers <span style="color:var(--light1)">Nuzlocke · Hard · No IVs · Longer AFK ›</span></div>
+            <div style="height:40px;border-radius:11px;background:var(--dark1);display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:13px">Language / 语言 <span style="color:var(--light1)">English ▾</span></div>
+          </div>
+          <div style="border-radius:20px;background:var(--dark2);padding:18px;display:flex;flex-direction:column;gap:10px">
+            <div style="font-size:15px;font-weight:800">About</div>
+            <div style="display:flex;gap:8px"><div style="flex:1;height:40px;border-radius:11px;background:var(--dark1);display:flex;align-items:center;justify-content:center;font-size:13px">Credits</div><div style="flex:1;height:40px;border-radius:11px;background:var(--dark1);display:flex;align-items:center;justify-content:center;font-size:13px">Discord ↗</div></div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--light1)">v5</div>
+            <div style="margin-top:8px;border-radius:14px;border:1.5px solid rgb(206,83,83);padding:12px;display:flex;align-items:center;gap:12px"><span style="flex:1;font-size:13px">Danger zone · deletes your save</span><div style="height:38px;padding:0 16px;border-radius:10px;background:rgb(206,83,83);color:#fff;display:flex;align-items:center;font-size:13px;font-weight:800">Wipe Data</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="3g" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">3g</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Start · disclaimer fades, pick a starter</div></div>
+    <div data-screen-label="3g Start" style="position:relative;width:1440px;height:900px;border-radius:14px;overflow:hidden;background:repeating-linear-gradient(45deg, color-mix(in oklab, var(--light1) 6%, transparent) 0 2px, transparent 2px 22px), var(--dark1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:36px;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <div style="position:absolute;top:28px;left:50%;transform:translateX(-50%);max-width:720px;text-align:center;font-family:system-ui,sans-serif;font-size:12px;line-height:1.5;color:var(--light1);opacity:.55">#disclaimer-menu · unofficial fan game; Pokémon and all related names belong to their owners. Fades out after 5s.</div>
+      <div style="font-size:44px;font-weight:800">Choose your first partner</div>
+      <div style="display:flex;gap:28px;align-items:flex-end">
+        <sc-for list="{{ starters }}" as="s" hint-placeholder-count="3">
+          <div style="width:260px;height:320px;border-radius:28px;background:{{ s.bg }};box-shadow:{{ s.ring }};transform:{{ s.lift }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:pointer">
+            <div style="width:160px;height:160px;border-radius:14px;border:1px dashed color-mix(in oklab, var(--light2) 45%, transparent);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--light1)">sprite 144</div>
+            <span style="font-size:24px;font-weight:800">{{ s.n }}</span>
+            <span style="font-size:12px;font-weight:800;color:#fff;background:{{ s.c }};padding:3px 10px;border-radius:7px">{{ s.t }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="height:54px;padding:0 32px;border-radius:15px;background:var(--accent);color:#36342F;display:flex;align-items:center;font-size:18px;font-weight:800;box-shadow:0 4px 0 color-mix(in oklab, var(--accent), black 35%)">Start with Froakie</div>
+      <div style="font-size:14px;color:var(--light1)">Tip: right-click almost anything to see more about it.</div>
+    </div>
+  </div>
+
+  <div id="3h" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">3h</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Away-progress overlay · #afk-overlay</div></div>
+    <div data-screen-label="3h AFK overlay" style="position:relative;width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="battle" battling="true" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;background:repeating-linear-gradient(135deg, color-mix(in oklab, var(--light1) 10%, transparent) 0 10px, transparent 10px 20px)"></div>
+      <div style="position:absolute;inset:0;background:color-mix(in oklab, var(--dark1) 88%, transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px">
+        <div style="width:140px;height:140px;border-radius:14px;border:1px dashed color-mix(in oklab, var(--light2) 45%, transparent);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--light1)">Porygon gif</div>
+        <div style="display:flex;gap:10px"><sc-for list="{{ dots }}" as="d" hint-placeholder-count="3"><span style="width:12px;height:12px;border-radius:6px;background:var(--accent);opacity:{{ d.o }}"></span></sc-for></div>
+        <div style="font-size:22px;font-weight:800">AFK time is being calculated, please wait…</div>
+        <div style="font-size:13px;color:var(--light1)">Input is blocked until it's done</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="3i" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">3i</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Tutorial · step 2 "travel", pointing at the sidebar</div></div>
+    <div data-screen-label="3i Tutorial" style="position:relative;width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="home" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;background:repeating-linear-gradient(45deg, color-mix(in oklab, var(--light1) 6%, transparent) 0 2px, transparent 2px 22px)"></div>
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,.6);clip-path:polygon(0 0,100% 0,100% 100%,0 100%,0 70px,8px 70px,8px 110px,226px 110px,226px 70px,0 70px)"></div>
+      <div style="position:absolute;left:6px;top:70px;width:222px;height:40px;border-radius:11px;box-shadow:0 0 0 3px var(--accent),0 0 30px color-mix(in oklab, var(--accent) 60%, transparent)"></div>
+      <div style="position:absolute;left:260px;top:56px;width:460px;border-radius:22px;background:var(--light2);color:#36342F;padding:18px 20px;display:flex;gap:16px;box-shadow:0 20px 50px rgba(0,0,0,.5)">
+        <div style="width:64px;height:64px;flex:none;border-radius:32px;background:color-mix(in oklab, #F7D02C 45%, #fff);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:8px">PhD</div>
+        <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:800;opacity:.6">Pikachu PhD · 2 / 5</span><span style="font-size:15px;line-height:1.5">Open <b>Travel</b> in the sidebar (or press 1) and pick an area to start your first battle!</span><span style="font-size:11px;opacity:.6">Copy rewritten from "top left menu" to match the sidebar; the tutorial steps are unchanged.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="3j" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">3j</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Editor · Overview and Stats tabs (center column of <a href="PokeChill Web Turn 2.dc.html#2k">2k</a>)</div></div>
+    <div data-screen-label="3j Editor tabs" style="display:flex;gap:24px;padding:24px;border-radius:14px;background:var(--dark1);box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <div style="width:560px;height:620px;border-radius:18px;background:var(--dark2);padding:20px;box-sizing:border-box;display:flex;flex-direction:column;gap:14px">
+        <div style="font-size:11px;letter-spacing:.14em;color:var(--light1)">OVERVIEW</div>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+          <div style="border-radius:12px;background:var(--dark1);padding:12px;display:flex;flex-direction:column;gap:4px"><span style="font-size:11px;color:var(--light1)">Ability</span><span style="font-size:15px;font-weight:800">Static</span><span style="font-size:11px;color:var(--light1)">common</span></div>
+          <div style="border-radius:12px;background:var(--dark1);padding:12px;display:flex;flex-direction:column;gap:4px;opacity:.6"><span style="font-size:11px;color:var(--light1)">Hidden ability</span><span style="font-size:15px;font-weight:800">Lightning Rod</span><span style="font-size:11px;color:var(--light1)">locked</span></div>
+        </div>
+        <div style="font-size:12px;color:var(--light1)">Tags</div>
+        <div style="display:flex;gap:6px"><span style="height:28px;padding:0 10px;border-radius:14px;background:var(--dark1);display:flex;align-items:center;gap:6px;font-size:12px"><span style="width:8px;height:8px;border-radius:4px;background:#FF4671"></span>Favourites</span><span style="height:28px;padding:0 10px;border-radius:14px;border:1.5px dashed var(--light1);box-sizing:border-box;display:flex;align-items:center;font-size:12px;color:var(--light1)">+ Add tag</span></div>
+        <div style="font-size:12px;color:var(--light1)">Ribbons</div>
+        <div style="display:flex;gap:6px"><span style="width:36px;height:36px;border-radius:9px;background:repeating-conic-gradient(color-mix(in oklab, var(--light1) 40%, transparent) 0 25%, transparent 0 50%) 0 0/6px 6px"></span><span style="width:36px;height:36px;border-radius:9px;background:repeating-conic-gradient(color-mix(in oklab, var(--light1) 40%, transparent) 0 25%, transparent 0 50%) 0 0/6px 6px"></span></div>
+        <div style="font-size:12px;color:var(--light1)">Evolution</div>
+        <div style="border-radius:11px;background:var(--dark1);padding:10px 12px;font-size:13px">Unlocks <b>Raichu</b> by using a <b>Thunder Stone</b> at level 30+ <span style="color:rgb(130,211,130)">✔</span></div>
+        <div style="margin-top:auto;border-radius:11px;background:var(--dark1);padding:12px;font-family:system-ui,sans-serif;font-size:13px;line-height:1.55;color:var(--light1)">Lore · expanded. The species text from the game goes here and wraps.</div>
+      </div>
+      <div style="width:560px;height:620px;border-radius:18px;background:var(--dark2);padding:20px;box-sizing:border-box;display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:11px;letter-spacing:.14em;color:var(--light1)">STATS · base and IV side by side</div>
+        <div style="display:grid;grid-template-columns:40px minmax(0,1fr) 40px minmax(0,1fr) 44px;gap:10px;font-size:11px;color:var(--light1)"><span></span><span>Base</span><span></span><span>IV (0–6)</span><span></span></div>
+        <sc-for list="{{ stats }}" as="s" hint-placeholder-count="6">
+          <div style="display:grid;grid-template-columns:40px minmax(0,1fr) 40px minmax(0,1fr) 44px;gap:10px;align-items:center">
+            <span style="font-size:13px;color:var(--light1)">{{ s.k }}</span>
+            <div style="display:flex;gap:4px"><sc-for list="{{ s.dots }}" as="d" hint-placeholder-count="6"><span style="flex:1;height:10px;border-radius:3px;background:{{ d }}"></span></sc-for></div>
+            <span style="font-size:13px;font-weight:700;text-align:right">{{ s.v }}</span>
+            <div style="display:flex;gap:4px"><sc-for list="{{ s.ivDots }}" as="d" hint-placeholder-count="6"><span style="flex:1;height:10px;border-radius:3px;background:{{ d }}"></span></sc-for></div>
+            <span style="font-size:12px;text-align:right;color:var(--light1)">{{ s.iv }}</span>
+          </div>
+        </sc-for>
+        <div style="margin-top:auto;font-size:12px;color:var(--light1);line-height:1.5">The game switches between Base Stats and IV's Stats; on desktop both fit side by side, and the switch stays in the right column of 2k.</div>
+      </div>
+    </div>
+  </div>
+</div></x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;default&quot;,&quot;dark&quot;,&quot;verdant&quot;,&quot;lilac&quot;,&quot;cherry&quot;,&quot;onyx&quot;,&quot;coral&quot;,&quot;oled&quot;,&quot;halloween&quot;],&quot;default&quot;:&quot;default&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  componentDidMount() { this.applyTheme(); }
+  componentDidUpdate() { this.applyTheme(); }
+  applyTheme() {
+    const T = {
+      default: ['#36342F', '#444138', '#94886B', '#ECDEB7'], dark: ['#26252a', '#313036', '#7f7d8a', '#e2e0ea'],
+      verdant: ['#2B3530', '#36433B', '#7F9A84', '#D5EBD3'], lilac: ['#332F3D', '#3F3A4C', '#8E86A8', '#E3DCF5'],
+      cherry: ['#3A2E31', '#4A3A3E', '#A07F86', '#F4DCE0'], onyx: ['#222325', '#2E2F32', '#7D8086', '#E4E5E8'],
+      coral: ['#3A302C', '#4B3D37', '#A8887A', '#F6DDD0'], oled: ['#000000', '#141414', '#6E6E6E', '#E8E8E8'],
+      halloween: ['#241E2B', '#33283A', '#9A6FA8', '#FFB65C']
+    };
+    const t = T[this.props.theme] || T.default, s = document.body.style;
+    ['--dark1', '--dark2', '--light1', '--light2'].forEach((k, i) => s.setProperty(k, t[i]));
+  }
+  renderVals() {
+    const C = { normal: '#A8A77A', fire: '#EE8130', water: '#6390F0', electric: '#F7D02C', grass: '#7AC74C', ice: '#96D9D6', fighting: '#C22E28', poison: '#A33EA1', ground: '#E2BF65', flying: '#A98FF3', psychic: '#F95587', bug: '#A6B91A', rock: '#B6A136', ghost: '#735797', dragon: '#6F35FC', dark: '#705746', steel: '#B7B7CE', fairy: '#D685AD' };
+    const muted = 'color-mix(in oklab, var(--light1) 25%, transparent)';
+    const THEMES = [['default', '#36342F', '#444138', '#94886B', '#ECDEB7'], ['dark', '#26252a', '#313036', '#7f7d8a', '#e2e0ea'], ['verdant', '#2B3530', '#36433B', '#7F9A84', '#D5EBD3'], ['lilac', '#332F3D', '#3F3A4C', '#8E86A8', '#E3DCF5'], ['cherry', '#3A2E31', '#4A3A3E', '#A07F86', '#F4DCE0'], ['onyx', '#222325', '#2E2F32', '#7D8086', '#E4E5E8'], ['coral', '#3A302C', '#4B3D37', '#A8887A', '#F6DDD0'], ['oled', '#000000', '#141414', '#6E6E6E', '#E8E8E8']];
+    return {
+      six: Array.from({ length: 6 }, (_, i) => ({ i })),
+      eventTickets: [
+        ['#E301', 'Tar Pit Hollow', 'Wild Zone ✦', '#967546', '#fff', 'Lv 30–40'],
+        ['#E302', 'Fossil Dig Site', 'Collection ◈', '#58644b', '#fff', 'Not catchable · better drops'],
+        ['#E303', 'Amber Cavern', 'Tier I Raid ❖', '#91718B', '#fff', 'Lv 40 · drops Apricorns'],
+        ['#E304', 'Primal Crater', 'Tier II Raid ❖', '#91718B', '#fff', 'Lv 60', 'Defeat Elite Four Lance to unlock Tier II raids'],
+        ['#E305', 'Sunken Ruins', 'Tier III Raid ❖', '#91718B', '#fff', 'Lv 80'],
+        ['#E306', 'Core of the World', 'Tier IV Raid ❖', '#ffe15e', '#36342F', 'Lv 100', 'Defeat Ultra Entity Lusamine to unlock Tier IV raids']
+      ].map(([no, name, tag, tagBg, tagFg, sub, cond]) => ({ no, name, tag, tagBg, tagFg, sub, locked: !!cond, cond: cond || '' })),
+      trainings: [
+        ['IV Training', '★★', '#7ed0f0', 'Raise one IV by beating 20 sandbag rounds', 0],
+        ['EXP Training', '★', 'rgb(130,211,130)', 'Gain a large amount of experience', 0],
+        ['Ability Training', '★★★', '#ffe15e', 'Reroll the ability to a new one', 0],
+        ['Hidden Ability Training', '★★★★', '#FF4671', 'Unlock the hidden ability', 'Needs a Pokémon at level 100'],
+        ['Signature Move Training', '★★★★★', '#d49a2e', 'Learn its signature move', 'This Pokémon has no signature move']
+      ].map(([n, d, c, desc, why]) => ({ n, d, c, desc, why: why || '', locked: !!why, open: !why, op: why ? 0.5 : 1, border: n === 'IV Training' ? 'var(--accent)' : 'transparent', tint: `color-mix(in oklab, ${c} 22%, var(--dark1))` })),
+      ivInherit: [['HP', 80], ['Atk', 65], ['Def', 65], ['SpA', 50], ['SpD', 50], ['Spe', 0]].map(([k, p]) => ({ k, p })),
+      dictMoves: [['Hydro Pump', 'water', 'Special', 110], ['Surf', 'water', 'Special', 90], ['Water Gun', 'water', 'Special', 40], ['Aqua Tail', 'water', 'Physical', 90], ['Waterfall', 'water', 'Physical', 80], ['Scald', 'water', 'Special', 80], ['Liquidation', 'water', 'Physical', 85], ['Aqua Jet', 'water', 'Physical', 40], ['Water Shuriken', 'water', 'Special', 15], ['Muddy Water', 'water', 'Special', 90], ['Rain Dance', 'water', 'Status', '—'], ['Soak', 'water', 'Status', '—'], ['Brine', 'water', 'Special', 65], ['Bubble Beam', 'water', 'Special', 65]].map(([n, t, cat, p], i) => ({ n, c: C[t], t: t[0].toUpperCase() + t.slice(1), cat, p, bg: i === 0 ? 'color-mix(in oklab, var(--accent) 12%, var(--dark1))' : 'transparent', border: i === 0 ? 'var(--accent)' : 'transparent' })),
+      guides: ['Inspecting', 'Stats', 'Abilities', 'Experience', 'Moves', 'STAB', 'Cross-Power', 'Battle Fatigue', 'Status Effects', 'Buffs and Debuffs', 'Weather', 'Shiny', 'Genetics · Quick Guide', 'Genetics · Compatibility', 'Genetics · Power Cost'].map((n, i) => ({ n, no: String(i + 1).padStart(2, '0'), grp: i >= 12 ? 'Genetics' : 'Battle', gc: i >= 12 ? '#7ed0f0' : 'var(--light1)' })),
+      themes: THEMES.map(([n, a, b, c, d], i) => ({ n, a, b, c, d, ring: i === 0 ? '0 0 0 2px var(--accent)' : 'none' })),
+      starters: [['Litten', 'Fire', C.fire], ['Turtwig', 'Grass', C.grass], ['Froakie', 'Water', C.water]].map(([n, t, c], i) => ({ n, t, c, bg: `color-mix(in oklab, ${c} 20%, var(--dark2))`, ring: i === 2 ? `0 0 0 3px ${c}, 0 20px 50px rgba(0,0,0,.4)` : 'none', lift: i === 2 ? 'translateY(-10px)' : 'none' })),
+      dots: [1, 0.6, 0.3].map(o => ({ o })),
+      stats: [['HP', 4, 168, 5], ['Atk', 3, 102, 2], ['Def', 2, 84, 3], ['SpA', 4, 118, 6], ['SpD', 3, 96, 4], ['Spe', 5, 148, 6]].map(([k, n, v, iv]) => ({ k, v, iv: iv + ' / 6', dots: Array.from({ length: 6 }, (_, i) => i < n ? 'var(--light2)' : muted), ivDots: Array.from({ length: 6 }, (_, i) => i < iv ? '#7ed0f0' : muted) }))
+    };
+  }
+}
+</script>
+</body>
+</html>
