@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Winky+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+html{background:#1a1916}
+body{margin:0;background:#1a1916;width:max-content;min-width:100%;--dark1:#36342F;--dark2:#444138;--light1:#94886B;--light2:#ECDEB7;--accent:#ffe15e;font-family:'Winky Sans',system-ui,sans-serif;color:var(--light2);-webkit-font-smoothing:antialiased}
+a{color:var(--accent)} a:hover{color:var(--light2)}
+</style>
+</helmet>
+<div style="padding:64px 72px 40px;display:flex;flex-direction:column;gap:10px;max-width:1100px">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:#94886B">TURN 2 · DESKTOP WEB · <a href="PokeChill Web Redesign.dc.html">← turn 1</a></div>
+  <div style="font-size:40px;font-weight:800;color:#ECDEB7">PokeChill · Web UI — turn 2</div>
+  <div style="font-size:15px;line-height:1.6;color:#b9ad8f;text-wrap:pretty">Decisions: menu icons reuse the game's existing pixel icons (the checkered squares mark where each goes, 18px, <span style="font-family:'JetBrains Mono',monospace">image-rendering:pixelated</span>). Mega Dimension is a tab inside VS. Full screen is in the sidebar footer. Reward rows only exist while claimable (the group disappears when empty). Sidebar battle card = <b>enemy HP</b> + team standing. <a href="#2b">2b</a>, <a href="#2j">2j</a> and <a href="#2o">2o</a> are in Chinese to check label length.</div>
+</div>
+
+<div style="padding:0 72px 72px;display:flex;flex-wrap:wrap;gap:56px;align-items:flex-start">
+  <div id="2a" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">2a</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Shell states · sidebar variants + shortcuts</div></div>
+    <div data-screen-label="2a Shell states" style="width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;gap:24px;padding:24px;box-sizing:border-box;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <div style="display:flex;flex-direction:column;gap:8px"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--light1)">EN · in battle (VS/Team/Training locked)</div><div style="width:232px;height:820px;border-radius:12px;overflow:hidden"><dc-import name="WebSidebar" active="battle" battling="true" rewards="some" hint-size="232px,820px" style="height:100%"></dc-import></div></div>
+      <div style="display:flex;flex-direction:column;gap:8px"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--light1)">中文 · idle · locked row clicked</div><div style="width:232px;height:820px;border-radius:12px;overflow:hidden"><dc-import name="WebSidebar" active="travel" battling="false" lang="zh" rewards="all" show-hint="true" hint-size="232px,820px" style="height:100%"></dc-import></div></div>
+      <div style="display:flex;flex-direction:column;gap:8px"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--light1)">EN · idle · all rewards claimed</div><div style="width:232px;height:820px;border-radius:12px;overflow:hidden"><dc-import name="WebSidebar" active="dex" battling="false" rewards="none" hint-size="232px,820px" style="height:100%"></dc-import></div></div>
+      <div style="display:flex;flex-direction:column;gap:8px"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--light1)">Collapsed · hover tip</div><div style="width:190px;height:820px;border-radius:12px;overflow:hidden;background:color-mix(in oklab, var(--dark1), black 10%)"><dc-import name="WebSidebar" active="travel" collapsed="true" tip="team" rewards="some" hint-size="72px,820px" style="height:100%"></dc-import></div></div>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:14px;padding-top:22px">
+        <div style="border-radius:16px;background:var(--dark2);padding:16px;display:flex;flex-direction:column;gap:10px">
+          <div style="font-size:15px;font-weight:800">Keyboard shortcuts</div>
+          <sc-for list="{{ shortcuts }}" as="s" hint-placeholder-count="7">
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px"><span style="min-width:62px;display:flex;gap:4px"><sc-for list="{{ s.keys }}" as="k" hint-placeholder-count="1"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:2px 7px;border-radius:5px;background:var(--dark1);border:1px solid color-mix(in oklab, var(--light1) 45%, transparent);border-bottom-width:2px">{{ k }}</span></sc-for></span><span style="flex:1">{{ s.label }}</span><span style="font-size:10px;color:{{ s.srcColor }}">{{ s.src }}</span></div>
+          </sc-for>
+          <div style="font-size:11px;color:var(--light1);line-height:1.5">Opened with the <b style="color:var(--light2)">?</b> button in the sidebar footer (or the ? key). Keys shown in the rows are hidden while a row is locked.</div>
+        </div>
+        <div style="border-radius:16px;background:var(--dark2);padding:16px;display:flex;flex-direction:column;gap:8px;font-size:12.5px;line-height:1.5">
+          <div style="font-size:15px;font-weight:800">Rules</div>
+          <div><b>Battle row, idle:</b> dimmed with an "idle" label. Clicking it shows a toast, "Pick an area in Travel or VS first".</div>
+          <div><b>Locked row:</b> clicking shakes the row and opens the unlock hint inline under it (2nd column), with a link to VS.</div>
+          <div><b>Rewards:</b> a row disappears once claimed; the group disappears when empty (3rd column).</div>
+          <div><b>Collapsed:</b> automatic below 1280px wide, or pinned manually. Hovering shows the label and its key.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="2b" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">2b</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">1024×768 · collapsed sidebar, inspector as overlay (中文)</div></div>
+    <div data-screen-label="2b 1024 Travel" style="position:relative;width:1024px;height:768px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="travel" collapsed="true" lang="zh" hint-size="72px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="height:60px;flex:none;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+          <div style="font-size:20px;font-weight:800">探索</div>
+          <div style="padding:3px;border-radius:12px;background:color-mix(in oklab, var(--dark1), black 10%);display:flex;gap:3px">
+            <div style="height:30px;padding:0 14px;border-radius:9px;background:#967546;color:#fff;display:flex;align-items:center;font-size:13px;font-weight:700">野外区域</div>
+            <div style="height:30px;padding:0 14px;border-radius:9px;color:var(--light1);display:flex;align-items:center;font-size:13px">地下城</div>
+            <div style="height:30px;padding:0 14px;border-radius:9px;color:var(--light1);display:flex;align-items:center;font-size:13px">活动</div>
+          </div>
+          <div style="flex:1"></div>
+          <div style="height:30px;padding:0 12px;border-radius:15px;background:var(--dark2);display:flex;align-items:center;gap:6px;font-size:12px;color:var(--light1)">轮换 <b style="color:var(--light2)">2/5</b> · <b style="color:var(--light2);font-variant-numeric:tabular-nums">06:42:11</b> 后重置</div>
+        </div>
+        <div style="padding:18px 20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+          <sc-for list="{{ ticketsZh }}" as="tk" hint-placeholder-count="6">
+            <div style="position:relative;height:140px;border-radius:18px;background:var(--dark2);display:grid;grid-template-columns:minmax(0,1fr) 130px;overflow:hidden;box-shadow:{{ tk.ring }}">
+              <div style="padding:14px 12px 12px 16px;display:flex;flex-direction:column;gap:5px;min-width:0">
+                <div style="display:flex;gap:6px;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--light1)">{{ tk.no }}</span><span style="font-size:10px;font-weight:700;color:#fff;background:#967546;padding:2px 7px;border-radius:6px">野外区域 ✦</span></div>
+                <div style="font-size:19px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ tk.name }}</div>
+                <div style="font-size:12px;color:var(--light1)">{{ tk.sub }}</div>
+                <div style="margin-top:auto;width:100px;height:12px;opacity:.5;background:repeating-linear-gradient(90deg, var(--light2) 0 2px, transparent 2px 4px, var(--light2) 4px 5px, transparent 5px 8px)"></div>
+              </div>
+              <div style="background:repeating-linear-gradient(135deg, color-mix(in oklab, var(--light1) 16%, transparent) 0 6px, transparent 6px 12px), color-mix(in oklab, var(--dark1), black 10%);border-left:2px dashed var(--dark1)"></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="position:absolute;top:12px;right:12px;bottom:12px;width:340px;border-radius:18px;background:var(--dark2);box-shadow:-20px 0 50px rgba(0,0,0,.5),inset 0 1px 0 color-mix(in oklab, var(--light2) 12%, transparent);padding:16px 18px;box-sizing:border-box;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:11px;letter-spacing:.14em;color:var(--light1)">查看 · 区域</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--light1);border:1px solid color-mix(in oklab, var(--light1) 45%, transparent);border-radius:4px;padding:1px 6px">Esc</span></div>
+        <div style="height:100px;border-radius:14px;background:repeating-linear-gradient(135deg, color-mix(in oklab, #7AC74C 16%, transparent) 0 8px, transparent 8px 16px), var(--dark1);display:flex;align-items:flex-end;padding:12px;box-sizing:border-box"><span style="font-size:22px;font-weight:800">常青森林</span></div>
+        <div style="display:flex;gap:6px"><span style="font-size:11px;color:var(--light1);background:var(--dark1);padding:3px 8px;border-radius:6px">Lv 5–12</span><span style="font-size:11px;font-weight:800;color:#36342F;background:#7ed0f0;padding:3px 8px;border-radius:6px">已全部捕获</span></div>
+        <div style="font-size:12px;font-weight:700">区域宝可梦</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ tenMons }}" as="m" hint-placeholder-count="10"><div style="width:44px;height:44px;border-radius:10px;background:{{ m.bg }}"></div></sc-for></div>
+        <div style="font-size:12px;font-weight:700">区域道具</div>
+        <div style="height:32px;border-radius:9px;background:var(--dark1);display:flex;align-items:center;padding:0 10px;font-size:13px">橙橙果<span style="margin-left:auto;font-size:11px;color:var(--light1)">常见</span></div>
+        <div style="margin-top:auto;height:46px;border-radius:13px;background:var(--accent);color:#36342F;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800">选择队伍并出发 →</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="2c" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">2c</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">1920 max-width behavior · schematic at 50%</div></div>
+    <div data-screen-label="2c 1920 schematic" style="display:flex;gap:28px;align-items:flex-start">
+      <div style="position:relative;width:960px;height:540px;border-radius:10px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+        <div style="width:116px;height:100%;background:var(--dark2);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--light1);writing-mode:vertical-rl">sidebar · 232 fixed</div>
+        <div style="flex:1;display:flex;justify-content:center;background:repeating-linear-gradient(135deg, color-mix(in oklab, var(--light1) 8%, transparent) 0 6px, transparent 6px 12px)">
+          <div style="width:720px;height:100%;background:var(--dark1);display:flex;flex-direction:column;border-left:1px dashed var(--light1);border-right:1px dashed var(--light1)">
+            <div style="height:32px;border-bottom:1px solid color-mix(in oklab, var(--light1) 30%, transparent);display:flex;align-items:center;padding:0 12px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--light1)">top bar · spans max-width</div>
+            <div style="flex:1;display:flex;gap:10px;padding:10px">
+              <div style="flex:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:74px;gap:8px">
+                <sc-for list="{{ nine }}" as="n" hint-placeholder-count="9"><div style="border-radius:8px;background:var(--dark2)"></div></sc-for>
+              </div>
+              <div style="width:190px;border-radius:8px;background:var(--dark2);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--light1)">inspector · 380 docked</div>
+            </div>
+          </div>
+        </div>
+        <div style="position:absolute;left:120px;top:250px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--light1)">gutter</div>
+        <div style="position:absolute;right:6px;top:250px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--light1)">gutter</div>
+        <div style="position:absolute;left:236px;right:4px;bottom:8px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent)">content max-width 1440 · centered</div>
+      </div>
+      <div style="width:360px;display:flex;flex-direction:column;gap:10px;font-size:13px;line-height:1.55;color:#ECDEB7">
+        <div style="font-size:15px;font-weight:800">Breakpoints</div>
+        <div><b style="color:#ffe15e">≥ 1680</b> · content (top bar + page + inspector) stops at 1440 and centers; the gutters show --dark1 at 90% under the #bg-pattern.</div>
+        <div><b style="color:#ffe15e">1280–1679</b> · the layout in turn 1: expanded sidebar, docked inspector.</div>
+        <div><b style="color:#ffe15e">1024–1279</b> · collapsed sidebar; the inspector turns into an overlay drawer with Esc to close (<a href="#2b">2b</a>).</div>
+        <div><b style="color:#ffe15e">&lt; 1024</b> · out of scope (covered by the iOS doc).</div>
+        <div style="font-size:15px;font-weight:800;margin-top:6px">Grids</div>
+        <div>Tickets: <span style="font-family:'JetBrains Mono',monospace;font-size:11px">auto-fill minmax(420px,1fr)</span> → 2 columns at 1440, 3 at 1920. Box / Dex: <span style="font-family:'JetBrains Mono',monospace;font-size:11px">auto-fill 104px</span>. The battle stage caps at 1100px.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="padding:0 72px 72px;display:flex;flex-wrap:wrap;gap:56px;align-items:flex-start">
+  <div id="2d" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">2d</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Battle · normal wild fight + inspector level 2 (Pokémon → move)</div></div>
+    <div data-screen-label="2d Battle wild + inspector" style="width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="battle" battling="true" area="Route 2" enemy-hp="38" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="height:64px;flex:none;display:flex;align-items:center;gap:14px;padding:0 24px;border-bottom:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+          <div style="font-size:22px;font-weight:800">Route 2</div>
+          <span style="font-size:11px;font-weight:700;color:#fff;background:#967546;padding:3px 8px;border-radius:6px">Wild Zone ✦</span>
+          <span style="font-size:12px;color:var(--light1)">Lv 8–14</span>
+          <div style="flex:1"></div>
+          <div style="height:36px;padding:0 16px;border-radius:10px;border:1.5px solid rgb(206,83,83);color:rgb(230,130,130);display:flex;align-items:center;font-size:14px;font-weight:700">Leave battle</div>
+        </div>
+        <div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 380px">
+          <div style="padding:20px 24px;display:flex;flex-direction:column;gap:16px;min-width:0">
+            <div style="position:relative;height:430px;border-radius:22px;overflow:hidden;background:repeating-linear-gradient(135deg, color-mix(in oklab, #7AC74C 12%, transparent) 0 10px, transparent 10px 20px), color-mix(in oklab, var(--dark1), black 10%);border:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+              <div style="position:absolute;inset:0;background:linear-gradient(180deg, transparent 40%, color-mix(in oklab, var(--dark1) 90%, transparent))"></div>
+              <div style="position:absolute;left:90px;top:70px;display:flex;flex-direction:column;align-items:center">
+                <div style="width:220px;height:220px;border-radius:16px;border:1px dashed color-mix(in oklab, var(--light1) 55%, transparent);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--light1)">wild sprite · 192px</div>
+                <div style="width:150px;height:16px;margin-top:-6px;border-radius:50%;background:rgba(0,0,0,.45)"></div>
+              </div>
+              <div style="position:absolute;right:28px;top:110px;width:300px;display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font-size:30px;font-weight:800">Pidgeotto</span><span style="font-size:14px;color:var(--light1)">Lv 13</span></div>
+                <div style="height:16px;border-radius:8px;overflow:hidden;background:var(--dark1)"><div style="width:38%;height:100%;background:rgb(221,168,99)"></div></div>
+                <div style="font-size:12px;color:var(--light1);text-align:right;font-variant-numeric:tabular-nums">38%</div>
+              </div>
+              <div style="position:absolute;left:16px;right:16px;bottom:16px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+                <sc-for list="{{ wildEnemyMoves }}" as="m" hint-placeholder-count="4"><div style="height:36px;border-radius:10px;border:1.5px solid {{ m.color }};background:rgba(0,0,0,.4);display:flex;align-items:center;padding:0 12px;font-size:13px">{{ m.name }}</div></sc-for>
+              </div>
+            </div>
+            <div style="border-radius:22px;background:var(--dark2);padding:16px;display:flex;flex-direction:column;gap:12px;border:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:52px;height:52px;border-radius:26px;background:color-mix(in oklab, #F7D02C 22%, var(--dark1))"></div>
+                <span style="font-size:10px;font-weight:800;color:#36342F;background:var(--accent);padding:2px 7px;border-radius:5px">ACTIVE</span>
+                <span style="font-size:20px;font-weight:800">Pikachu</span><span style="font-size:13px;color:var(--light1)">Lv 42</span>
+                <div style="flex:1;height:10px;border-radius:5px;overflow:hidden;background:var(--dark1)"><div style="width:79%;height:100%;background:rgb(130,211,130)"></div></div>
+                <span style="font-size:12px;color:var(--light1)">132 / 168</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+                <sc-for list="{{ activeMoves }}" as="m" hint-placeholder-count="4">
+                  <div style="position:relative;height:48px;border-radius:12px;border:1.5px solid {{ m.color }};background:var(--dark1);overflow:hidden;box-shadow:{{ m.glow }}">
+                    <div style="position:absolute;left:0;top:0;bottom:0;width:{{ m.fill }}%;background:{{ m.fillBg }}"></div>
+                    <div style="position:relative;height:100%;display:flex;align-items:center;padding:0 12px;font-size:14px;font-weight:700">{{ m.name }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="font-size:11px;color:var(--light1)">Right-clicked <b style="color:var(--light2)">Thunderbolt</b> → the inspector opens in the right column, replacing the team list until closed.</div>
+            </div>
+          </div>
+          <div style="position:relative;border-left:1px solid color-mix(in oklab, var(--light1) 28%, transparent);background:var(--dark1);padding:14px 16px;display:flex;flex-direction:column">
+            <div style="margin:0 10px;height:14px;border-radius:12px 12px 0 0;background:color-mix(in oklab, var(--dark2) 70%, var(--dark1));"></div>
+            <div style="margin:0 5px;height:12px;border-radius:12px 12px 0 0;background:color-mix(in oklab, var(--dark2) 85%, var(--dark1));display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--light1)">Pikachu</div>
+            <div style="flex:1;border-radius:18px;background:var(--dark2);padding:16px;display:flex;flex-direction:column;gap:14px;box-shadow:0 -6px 20px rgba(0,0,0,.25)">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="height:30px;padding:0 10px;border-radius:9px;background:var(--dark1);display:flex;align-items:center;gap:6px;font-size:12px">← Pikachu <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--light1)">⌫</span></div>
+                <div style="flex:1;font-size:11px;color:var(--light1);text-align:right">Team › Pikachu › <b style="color:var(--light2)">Thunderbolt</b></div>
+                <div style="width:30px;height:30px;border-radius:15px;background:var(--dark1);display:flex;align-items:center;justify-content:center;color:var(--light1);font-size:12px">✕</div>
+              </div>
+              <div style="border-radius:16px;padding:16px;background:color-mix(in oklab, #F7D02C 16%, var(--dark1));border:1.5px solid #F7D02C;display:flex;flex-direction:column;gap:6px">
+                <div style="display:flex;gap:6px"><span style="font-size:11px;font-weight:800;color:#36342F;background:#F7D02C;padding:2px 8px;border-radius:6px">Electric</span><span style="font-size:11px;font-weight:700;background:rgba(0,0,0,.3);padding:2px 8px;border-radius:6px">Special</span></div>
+                <div style="font-size:26px;font-weight:800">Thunderbolt</div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+                <div style="border-radius:12px;background:var(--dark1);padding:10px;display:flex;flex-direction:column;gap:2px"><span style="font-size:10px;color:var(--light1)">Power</span><span style="font-size:20px;font-weight:800">90</span></div>
+                <div style="border-radius:12px;background:var(--dark1);padding:10px;display:flex;flex-direction:column;gap:2px"><span style="font-size:10px;color:var(--light1)">Effect</span><span style="font-size:20px;font-weight:800">10%</span></div>
+                <div style="border-radius:12px;background:var(--dark1);padding:10px;display:flex;flex-direction:column;gap:2px"><span style="font-size:10px;color:var(--light1)">STAB</span><span style="font-size:20px;font-weight:800;color:rgb(130,211,130)">×1.5</span></div>
+              </div>
+              <div style="font-family:system-ui,sans-serif;font-size:14px;line-height:1.5;text-wrap:pretty">Deals damage and has a 10% chance to <span style="border-bottom:1.5px dotted var(--light1);cursor:help">paralyze</span> the target.</div>
+              <div style="font-size:11px;color:var(--light1)">Underlined terms open level 3 (Paralysis status).</div>
+              <div style="margin-top:auto;display:flex;gap:8px">
+                <div style="flex:1;height:40px;border-radius:11px;background:var(--light2);color:#36342F;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800">Change moves</div>
+                <div style="height:40px;padding:0 14px;border-radius:11px;background:var(--dark1);display:flex;align-items:center;font-size:13px">Back to team</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="2e" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">2e</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Battle · training (single member vs. sandbag)</div></div>
+    <div data-screen-label="2e Training battle" style="width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="battle" battling="true" area="Training" enemy-hp="72" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="height:64px;flex:none;display:flex;align-items:center;gap:14px;padding:0 24px;border-bottom:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+          <div style="font-size:22px;font-weight:800">Training</div>
+          <span style="font-size:11px;font-weight:700;color:#36342F;background:#7ed0f0;padding:3px 8px;border-radius:6px">IV Training ★★</span>
+          <div style="flex:1"></div>
+          <div style="height:34px;padding:0 14px;border-radius:17px;background:var(--dark2);display:flex;align-items:center;gap:8px;font-size:13px"><b style="font-size:18px;font-variant-numeric:tabular-nums;color:var(--accent)">20</b> Remaining</div>
+          <div style="height:36px;padding:0 16px;border-radius:10px;border:1.5px solid rgb(206,83,83);color:rgb(230,130,130);display:flex;align-items:center;font-size:14px;font-weight:700">Stop training</div>
+        </div>
+        <div style="flex:1;padding:24px;display:flex;flex-direction:column;gap:18px">
+          <div style="position:relative;flex:1;border-radius:24px;overflow:hidden;background:repeating-linear-gradient(90deg, color-mix(in oklab, var(--light1) 10%, transparent) 0 2px, transparent 2px 40px), color-mix(in oklab, var(--dark1), black 10%);border:1px solid color-mix(in oklab, var(--light1) 28%, transparent);display:flex;align-items:center;justify-content:space-around">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+              <div style="width:200px;height:200px;border-radius:16px;border:1px dashed color-mix(in oklab, var(--light1) 55%, transparent);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--light1)">#training-sprite-div · 192</div>
+              <div style="font-size:20px;font-weight:800">Pikachu <span style="font-size:13px;color:var(--light1)">Lv 42</span></div>
+            </div>
+            <div style="font-size:40px;color:var(--light1)">→</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+              <div style="width:120px;height:220px;border-radius:40px 40px 20px 20px;border:1px dashed color-mix(in oklab, var(--light1) 55%, transparent);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--light1);text-align:center">#training-sack<br>hit anim</div>
+              <div style="width:220px;height:12px;border-radius:6px;overflow:hidden;background:var(--dark1)"><div style="width:72%;height:100%;background:rgb(130,211,130)"></div></div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px">
+            <sc-for list="{{ activeMoves }}" as="m" hint-placeholder-count="4">
+              <div style="position:relative;height:52px;border-radius:12px;border:1.5px solid {{ m.color }};background:var(--dark2);overflow:hidden;box-shadow:{{ m.glow }}">
+                <div style="position:absolute;left:0;top:0;bottom:0;width:{{ m.fill }}%;background:{{ m.fillBg }}"></div>
+                <div style="position:relative;height:100%;display:flex;flex-direction:column;justify-content:center;padding:0 14px"><span style="font-size:14px;font-weight:700">{{ m.name }}</span><span style="font-size:10px;color:var(--light1)">{{ m.meta }}</span></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="2f" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">2f</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Battle result · area end + Battle Summary open</div></div>
+    <div data-screen-label="2f Result" style="position:relative;width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="battle" battling="true" area="Mt. Moon" enemy-hp="0" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;background:repeating-linear-gradient(135deg, color-mix(in oklab, var(--light1) 10%, transparent) 0 10px, transparent 10px 20px)"></div>
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,.55)"></div>
+      <div style="position:absolute;left:calc(232px + (100% - 232px - 900px) / 2);top:90px;width:900px;border-radius:26px;background:var(--dark2);box-shadow:0 30px 80px rgba(0,0,0,.6),inset 0 1px 0 color-mix(in oklab, var(--light2) 12%, transparent);overflow:hidden">
+        <div style="padding:22px 28px;display:flex;align-items:center;gap:14px;background:color-mix(in oklab, var(--accent) 14%, var(--dark2));border-bottom:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+          <div style="font-size:12px;letter-spacing:.14em;color:var(--light1)">#area-end</div>
+          <div style="font-size:26px;font-weight:800">Mt. Moon · battle over</div>
+          <div style="flex:1"></div>
+          <div style="font-size:13px;color:var(--light1)">42 defeated · 18 min</div>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 300px">
+          <div style="padding:22px 28px;display:flex;flex-direction:column;gap:18px;border-right:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="font-size:14px;font-weight:800">New items</div>
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+                <sc-for list="{{ resultItems }}" as="it" hint-placeholder-count="6">
+                  <div style="position:relative;height:48px;border-radius:12px;background:var(--dark1);border:1.5px solid {{ it.border }};display:flex;align-items:center;gap:10px;padding:0 12px"><span style="width:24px;height:24px;border-radius:6px;border:1px dashed var(--light1)"></span><span style="flex:1;font-size:13px">{{ it.n }}</span><span style="font-size:12px;color:var(--light1)">{{ it.c }}</span><sc-if value="{{ it.isNew }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-7px;right:8px;font-size:9px;font-weight:800;background:var(--accent);color:#36342F;padding:1px 5px;border-radius:4px">NEW</span></sc-if></div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="font-size:14px;font-weight:800">New Pokémon</div>
+              <div style="display:flex;gap:10px">
+                <sc-for list="{{ resultMons }}" as="m" hint-placeholder-count="3">
+                  <div style="position:relative;width:96px;display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:80px;height:80px;border-radius:16px;background:{{ m.bg }}"></div><span style="font-size:12px">{{ m.n }}</span><sc-if value="{{ m.shiny }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:4px;right:12px;color:#FF4671">✦</span></sc-if></div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+          <div style="padding:22px 24px;display:flex;flex-direction:column;gap:10px">
+            <div style="font-size:14px;font-weight:800">Battle Summary · damage share</div>
+            <sc-for list="{{ damage }}" as="d" hint-placeholder-count="6">
+              <div style="display:flex;flex-direction:column;gap:4px"><div style="display:flex;justify-content:space-between;font-size:12px"><span>{{ d.n }}</span><span style="color:var(--light1);font-variant-numeric:tabular-nums">{{ d.p }}%</span></div><div style="height:8px;border-radius:4px;background:var(--dark1);overflow:hidden"><div style="height:100%;width:{{ d.w }}%;background:{{ d.c }}"></div></div></div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="padding:18px 28px;display:flex;gap:10px;align-items:center;border-top:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+          <div style="height:48px;padding:0 26px;border-radius:13px;background:var(--accent);color:#36342F;display:flex;align-items:center;font-size:16px;font-weight:800;box-shadow:0 4px 0 color-mix(in oklab, var(--accent), black 35%)">Fight Again</div>
+          <div style="height:48px;padding:0 18px;border-radius:13px;background:var(--dark1);display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700">Auto-Refight <span style="font-size:12px;color:var(--light1)">12 tickets</span></div>
+          <div style="height:48px;padding:0 18px;border-radius:13px;background:var(--light2);color:#36342F;display:flex;align-items:center;font-size:14px;font-weight:700">Battle Summary ✓</div>
+          <div style="flex:1"></div>
+          <div style="height:48px;padding:0 18px;border-radius:13px;display:flex;align-items:center;font-size:14px;color:var(--light1);border:1px solid color-mix(in oklab, var(--light1) 45%, transparent)">Save and exit</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="padding:0 72px 72px;display:flex;flex-wrap:wrap;gap:56px;align-items:flex-start">
+  <div id="2g" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">2g</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Inspector variants · Pokémon → ability (level 2) · item</div></div>
+    <div data-screen-label="2g Inspector variants" style="display:flex;gap:24px;padding:24px;border-radius:14px;background:var(--dark1);box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <div style="width:360px;height:760px;border-radius:18px;background:var(--dark2);padding:16px;box-sizing:border-box;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:11px;letter-spacing:.14em;color:var(--light1)">INSPECT · POKÉMON</span><div style="width:30px;height:30px;border-radius:15px;background:var(--dark1);display:flex;align-items:center;justify-content:center;color:var(--light1);font-size:12px">✕</div></div>
+        <div style="display:flex;gap:14px;align-items:center">
+          <div style="width:96px;height:96px;border-radius:48px;background:color-mix(in oklab, #F7D02C 22%, var(--dark1));display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--light1)">96</div>
+          <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:22px;font-weight:800">Pikachu</span><div style="display:flex;gap:5px"><span style="font-size:11px;font-weight:800;color:#36342F;background:#F7D02C;padding:2px 8px;border-radius:6px">Electric</span><span style="font-size:11px;font-weight:800;color:#fff;background:#4f8cc0;padding:2px 8px;border-radius:6px">B</span></div><span style="font-size:11px;color:var(--light1)">Caught 14 · 1 shiny</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font-size:12px;color:var(--light1)">Base stats</div>
+          <sc-for list="{{ stats }}" as="s" hint-placeholder-count="6"><div style="display:grid;grid-template-columns:36px minmax(0,1fr);gap:10px;align-items:center"><span style="font-size:12px;color:var(--light1)">{{ s.k }}</span><div style="display:flex;gap:4px"><sc-for list="{{ s.dots }}" as="d" hint-placeholder-count="6"><span style="flex:1;height:8px;border-radius:3px;background:{{ d }}"></span></sc-for></div></div></sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:12px;color:var(--light1)">Abilities</div>
+          <div style="height:36px;border-radius:10px;background:color-mix(in oklab, var(--accent) 14%, var(--dark1));border:1.5px solid var(--accent);display:flex;align-items:center;padding:0 12px;font-size:13px">Static<span style="margin-left:auto;font-size:10px;color:var(--light1)">common · opens ›</span></div>
+          <div style="height:36px;border-radius:10px;background:var(--dark1);display:flex;align-items:center;padding:0 12px;font-size:13px">Lightning Rod<span style="margin-left:auto;font-size:10px;color:var(--light1)">hidden</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:12px;color:var(--light1)">Signature move</div>
+          <div style="height:36px;border-radius:10px;border:1.5px solid #F7D02C;background:var(--dark1);display:flex;align-items:center;padding:0 12px;font-size:13px">Volt Tackle</div>
+        </div>
+        <div style="margin-top:auto;display:flex;gap:8px"><div style="flex:1;height:40px;border-radius:11px;background:var(--dark1);display:flex;align-items:center;justify-content:center;font-size:13px">Learnable moves</div><div style="flex:1;height:40px;border-radius:11px;background:var(--light2);color:#36342F;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800">Open editor</div></div>
+      </div>
+      <div style="width:360px;height:760px;display:flex;flex-direction:column">
+        <div style="margin:0 12px;height:14px;border-radius:12px 12px 0 0;background:color-mix(in oklab, var(--dark2) 75%, var(--dark1));display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--light1)">Pikachu</div>
+        <div style="flex:1;border-radius:18px;background:var(--dark2);padding:16px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;align-items:center;gap:8px"><div style="height:30px;padding:0 10px;border-radius:9px;background:var(--dark1);display:flex;align-items:center;gap:6px;font-size:12px">← Pikachu <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--light1)">⌫</span></div><div style="flex:1"></div><div style="width:30px;height:30px;border-radius:15px;background:var(--dark1);display:flex;align-items:center;justify-content:center;color:var(--light1);font-size:12px">✕</div></div>
+          <div style="border-radius:16px;padding:18px;background:var(--dark1);display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;letter-spacing:.14em;color:var(--light1)">ABILITY · COMMON</span><span style="font-size:26px;font-weight:800">Static</span></div>
+          <div style="font-family:system-ui,sans-serif;font-size:14px;line-height:1.55;text-wrap:pretty">Contact with this Pokémon may <span style="border-bottom:1.5px dotted var(--light1)">paralyze</span> the attacker.</div>
+          <div style="font-size:12px;color:var(--light1)">Your Pokémon with Static · 3</div>
+          <div style="display:flex;gap:6px"><div style="width:52px;height:52px;border-radius:12px;background:color-mix(in oklab, #F7D02C 20%, var(--dark1))"></div><div style="width:52px;height:52px;border-radius:12px;background:color-mix(in oklab, #F7D02C 20%, var(--dark1))"></div><div style="width:52px;height:52px;border-radius:12px;background:color-mix(in oklab, #F7D02C 20%, var(--dark1))"></div></div>
+          <div style="margin-top:auto;font-size:11px;color:var(--light1)">Each level pushes a card; the one below peeks as a tab. Back: ⌫ or the ← chip. Esc/Space closes the whole stack.</div>
+        </div>
+      </div>
+      <div style="width:360px;height:760px;border-radius:18px;background:var(--dark2);padding:16px;box-sizing:border-box;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:11px;letter-spacing:.14em;color:var(--light1)">INSPECT · ITEM</span><div style="width:30px;height:30px;border-radius:15px;background:var(--dark1);display:flex;align-items:center;justify-content:center;color:var(--light1);font-size:12px">✕</div></div>
+        <div style="border-radius:16px;padding:18px;background:var(--dark1);display:flex;gap:14px;align-items:center">
+          <div style="width:64px;height:64px;border-radius:12px;background:repeating-conic-gradient(color-mix(in oklab, var(--light1) 40%, transparent) 0 25%, transparent 0 50%) 0 0/8px 8px"></div>
+          <div style="display:flex;flex-direction:column;gap:5px"><span style="font-size:22px;font-weight:800">Light Ball</span><div style="display:flex;gap:5px"><span style="font-size:11px;background:var(--dark2);padding:2px 8px;border-radius:6px">Held item</span><span style="font-size:11px;font-weight:800;color:#36342F;background:#7ed0f0;padding:2px 8px;border-radius:6px">Uncommon</span></div></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:0 4px"><span style="color:var(--light1)">Owned</span><b>×1</b></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:0 4px"><span style="color:var(--light1)">Held by</span><b>Pikachu</b></div>
+        <div style="font-family:system-ui,sans-serif;font-size:14px;line-height:1.55;text-wrap:pretty">An orb to be held by Pikachu that boosts its Attack and Sp. Atk stats.</div>
+        <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px">
+          <div style="height:42px;border-radius:11px;background:var(--light2);color:#36342F;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">Give to a Pokémon…</div>
+          <div style="font-size:11px;color:var(--light1);text-align:center">Opens the Pokédex in picker mode (<a href="#2j">2j</a>)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="2h" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">2h</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Team + collection box · drag from box into slot (replaces <a href="PokeChill Web Redesign.dc.html#1c">1c</a>)</div></div>
+    <div data-screen-label="2h Team + box" style="width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="team" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="height:64px;flex:none;display:flex;align-items:center;gap:12px;padding:0 24px;border-bottom:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+          <div style="height:36px;padding:0 12px;border-radius:10px;background:var(--dark2);display:flex;align-items:center;font-size:13px;color:var(--light1)">← Go back</div>
+          <div style="height:40px;padding:0 12px;border-radius:12px;background:var(--dark2);display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700">Team 1 · Main <span style="font-size:11px;color:var(--light1)">1 / 30</span> ▾</div>
+          <div style="width:40px;height:40px;border-radius:12px;background:var(--dark2);display:flex;align-items:center;justify-content:center;color:var(--light1)">✎</div>
+          <div style="height:40px;padding:0 12px;border-radius:12px;background:var(--dark2);display:flex;align-items:center;gap:6px;font-size:13px"><span style="color:var(--accent)">✧</span>Auto-Build</div>
+          <div style="height:40px;padding:0 12px;border-radius:12px;background:var(--dark2);display:flex;align-items:center;gap:6px;font-size:13px">⧉ Duplicate</div>
+          <div style="flex:1"></div>
+          <span style="font-size:12px;color:var(--light1)">→ Battle Tower · Great League ≤ B</span>
+          <div style="height:44px;padding:0 22px;border-radius:12px;background:var(--accent);color:#36342F;display:flex;align-items:center;font-size:16px;font-weight:800;box-shadow:0 4px 0 color-mix(in oklab, var(--accent), black 35%)">Save and Go!</div>
+        </div>
+        <div style="flex:1;min-height:0;display:grid;grid-template-columns:520px minmax(0,1fr)">
+          <div style="padding:18px 20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:12px;border-right:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+            <sc-for list="{{ teamSlots }}" as="s" hint-placeholder-count="5">
+              <div style="border-radius:18px;background:var(--dark2);padding:12px;display:flex;flex-direction:column;gap:10px;border:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+                <div style="display:flex;gap:10px;align-items:center">
+                  <div style="width:64px;height:64px;border-radius:14px;background:{{ s.bg }};flex:none"></div>
+                  <div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--light1)">{{ s.n }}</span><span style="font-size:16px;font-weight:800">{{ s.name }}</span><span style="font-size:11px;color:var(--light1)">{{ s.lv }}</span></div>
+                  <div style="width:32px;height:32px;border-radius:16px;border:1.5px dashed color-mix(in oklab, var(--light1) 60%, transparent);display:flex;align-items:center;justify-content:center;color:var(--light1)">+</div>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin-top:auto"><sc-for list="{{ s.moves }}" as="m" hint-placeholder-count="4"><span style="height:6px;border-radius:3px;background:{{ m }}"></span></sc-for></div>
+              </div>
+            </sc-for>
+            <div style="position:relative;border-radius:18px;border:2px dashed var(--accent);background:color-mix(in oklab, var(--accent) 8%, transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--accent)">
+              <span style="font-size:13px;font-weight:700">Drop to add · #06</span>
+              <div style="position:absolute;left:40px;top:14px;width:104px;height:120px;border-radius:14px;background:color-mix(in oklab, var(--dark2), white 8%);box-shadow:0 20px 40px rgba(0,0,0,.5);transform:rotate(-4deg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--light2)">
+                <div style="width:64px;height:64px;border-radius:12px;background:color-mix(in oklab, #6390F0 22%, var(--dark1))"></div><span style="font-size:12px;font-weight:700">Lapras</span><span style="font-size:10px;color:var(--light1)">Lv 47</span>
+              </div>
+            </div>
+          </div>
+          <div style="padding:18px 20px;display:flex;flex-direction:column;gap:12px;min-width:0">
+            <div style="display:flex;gap:8px;align-items:center">
+              <div style="flex:1;height:40px;border-radius:12px;background:var(--dark2);display:flex;align-items:center;gap:8px;padding:0 12px;font-size:13px;color:var(--light1)">⌕ Search the box <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;border:1px solid color-mix(in oklab, var(--light1) 45%, transparent);border-radius:4px;padding:0 5px">/</span></div>
+              <div style="height:40px;padding:0 12px;border-radius:12px;background:var(--light2);color:#36342F;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700">Division ≤ B ✕</div>
+              <div style="height:40px;padding:0 12px;border-radius:12px;background:var(--dark2);display:flex;align-items:center;font-size:13px">Filters · 1</div>
+              <div style="height:40px;padding:0 12px;border-radius:12px;background:var(--dark2);display:flex;align-items:center;font-size:13px">Sort: Level ↓</div>
+            </div>
+            <div style="font-size:11px;color:var(--light1)">Box · 842 caught · drag onto a slot, or click a slot first and pick here</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;overflow:hidden">
+              <sc-for list="{{ box }}" as="b" hint-placeholder-count="30">
+                <div style="position:relative;height:112px;border-radius:14px;background:var(--dark2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:grab" style-hover="background:color-mix(in oklab, var(--dark2), white 6%)">
+                  <div style="width:60px;height:60px;border-radius:12px;background:{{ b.bg }}"></div>
+                  <span style="font-size:11px;font-weight:700;max-width:88px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ b.name }}</span>
+                  <span style="font-size:10px;color:var(--light1)">{{ b.lv }}</span>
+                  <span style="position:absolute;top:7px;left:7px;width:7px;height:7px;border-radius:4px;background:{{ b.tag }}"></span>
+                  <sc-if value="{{ b.shiny }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:4px;right:7px;color:#FF4671;font-size:11px">✦</span></sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="padding:0 72px 72px;display:flex;flex-wrap:wrap;gap:56px;align-items:flex-start">
+  <div id="2i" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">2i</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Pokédex · browse with filter panel (replaces 11 &lt;select&gt;s)</div></div>
+    <div data-screen-label="2i Dex browse" style="position:relative;width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="dex" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="height:64px;flex:none;display:flex;align-items:center;gap:12px;padding:0 24px;border-bottom:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+          <div style="font-size:22px;font-weight:800">Pokédex</div>
+          <span style="font-size:12px;color:var(--light1)">Caught <b style="color:var(--light2)">842</b> / 1,025</span>
+          <div style="flex:1;max-width:420px;height:40px;border-radius:12px;background:var(--dark2);display:flex;align-items:center;gap:8px;padding:0 12px;font-size:13px;margin-left:12px;box-shadow:0 0 0 2px var(--accent)"><span style="color:var(--light1)">⌕</span>shiny type:water<span style="width:1.5px;height:18px;background:var(--light2)"></span><span style="margin-left:auto;font-size:11px;color:var(--accent)">Keywords ?</span></div>
+          <div style="flex:1"></div>
+          <div style="height:40px;padding:0 12px;border-radius:12px;background:var(--dark2);display:flex;align-items:center;font-size:13px">Sort: Total stats ↓</div>
+        </div>
+        <div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 380px">
+          <div style="position:relative;padding:14px 20px;display:flex;flex-direction:column;gap:12px;min-width:0">
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+              <span style="font-size:12px;color:var(--light1)">Active:</span>
+              <span style="height:28px;padding:0 10px;border-radius:14px;background:#6390F0;color:#fff;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700">Water ✕</span>
+              <span style="height:28px;padding:0 10px;border-radius:14px;background:#96D9D6;color:#36342F;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700">Ice ✕</span>
+              <span style="height:28px;padding:0 10px;border-radius:14px;background:var(--light2);color:#36342F;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700">Lv 40–60 ✕</span>
+              <span style="height:28px;padding:0 10px;border-radius:14px;background:var(--light2);color:#36342F;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700">Division ≥ B ✕</span>
+              <span style="height:28px;padding:0 10px;border-radius:14px;background:var(--light2);color:#36342F;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700">Signature move ✕</span>
+              <span style="font-size:12px;color:var(--accent);margin-left:4px">Clear all</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px;overflow:hidden">
+              <sc-for list="{{ boxWide }}" as="b" hint-placeholder-count="40">
+                <div style="position:relative;height:120px;border-radius:14px;background:var(--dark2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer" style-hover="background:color-mix(in oklab, var(--dark2), white 6%)">
+                  <div style="width:64px;height:64px;border-radius:12px;background:{{ b.bg }}"></div>
+                  <span style="font-size:11px;font-weight:700;max-width:94px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ b.name }}</span>
+                  <div style="display:flex;gap:4px;align-items:center"><span style="font-size:10px;color:var(--light1)">{{ b.lv }}</span><span style="font-size:9px;font-weight:800;color:#fff;background:{{ b.divBg }};padding:0 4px;border-radius:3px">{{ b.div }}</span></div>
+                  <span style="position:absolute;top:7px;left:7px;width:7px;height:7px;border-radius:4px;background:{{ b.tag }}"></span>
+                  <sc-if value="{{ b.shiny }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:4px;right:7px;color:#FF4671;font-size:11px">✦</span></sc-if>
+                </div>
+              </sc-for>
+            </div>
+            <div style="position:absolute;right:24px;bottom:20px;height:40px;padding:0 14px;border-radius:20px;background:var(--light2);color:#36342F;display:flex;align-items:center;font-size:13px;font-weight:700;box-shadow:0 8px 20px rgba(0,0,0,.4)">↑ Top</div>
+          </div>
+          <div style="border-left:1px solid color-mix(in oklab, var(--light1) 28%, transparent);background:var(--dark2);padding:16px 18px;display:flex;flex-direction:column;gap:14px;overflow:hidden">
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:15px;font-weight:800">Filters</span><span style="font-size:12px;color:var(--accent)">Clear all</span></div>
+            <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;color:var(--light1)">Type 1 / Type 2</span><div style="display:flex;flex-wrap:wrap;gap:5px"><sc-for list="{{ typeChips }}" as="c" hint-placeholder-count="18"><span style="height:24px;padding:0 8px;border-radius:12px;background:{{ c.bg }};color:{{ c.fg }};border:1.5px solid {{ c.border }};box-sizing:border-box;display:flex;align-items:center;font-size:11px">{{ c.label }}</span></sc-for></div></div>
+            <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;color:var(--light1)">Level</span><div style="display:flex;flex-wrap:wrap;gap:5px"><sc-for list="{{ levelChips }}" as="c" hint-placeholder-count="5"><span style="height:26px;padding:0 9px;border-radius:13px;background:{{ c.bg }};color:{{ c.fg }};border:1.5px solid {{ c.border }};box-sizing:border-box;display:flex;align-items:center;font-size:11px">{{ c.label }}</span></sc-for></div></div>
+            <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;color:var(--light1)">Division</span><div style="display:flex;flex-wrap:wrap;gap:5px"><sc-for list="{{ divChips }}" as="c" hint-placeholder-count="7"><span style="height:26px;min-width:30px;padding:0 8px;border-radius:13px;background:{{ c.bg }};color:{{ c.fg }};border:1.5px solid {{ c.border }};box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">{{ c.label }}</span></sc-for></div></div>
+            <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;color:var(--light1)">Shiny</span><div style="display:flex;flex-wrap:wrap;gap:5px"><sc-for list="{{ shinyChips }}" as="c" hint-placeholder-count="4"><span style="height:26px;padding:0 9px;border-radius:13px;background:{{ c.bg }};color:{{ c.fg }};border:1.5px solid {{ c.border }};box-sizing:border-box;display:flex;align-items:center;font-size:11px">{{ c.label }}</span></sc-for></div></div>
+            <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;color:var(--light1)">Ability rarity</span><div style="display:flex;flex-wrap:wrap;gap:5px"><sc-for list="{{ abilityChips }}" as="c" hint-placeholder-count="4"><span style="height:26px;padding:0 9px;border-radius:13px;background:{{ c.bg }};color:{{ c.fg }};border:1.5px solid {{ c.border }};box-sizing:border-box;display:flex;align-items:center;font-size:11px">{{ c.label }}</span></sc-for></div></div>
+            <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;color:var(--light1)">Moves · evolution · ribbons</span><div style="display:flex;flex-wrap:wrap;gap:5px"><sc-for list="{{ extraChips }}" as="c" hint-placeholder-count="5"><span style="height:26px;padding:0 9px;border-radius:13px;background:{{ c.bg }};color:{{ c.fg }};border:1.5px solid {{ c.border }};box-sizing:border-box;display:flex;align-items:center;font-size:11px">{{ c.label }}</span></sc-for></div></div>
+            <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;color:var(--light1)">Tags</span><div style="display:flex;flex-wrap:wrap;gap:5px"><sc-for list="{{ tagChips }}" as="t" hint-placeholder-count="3"><span style="height:26px;padding:0 9px;border-radius:13px;background:var(--dark1);display:flex;align-items:center;gap:6px;font-size:11px"><span style="width:8px;height:8px;border-radius:4px;background:{{ t.c }}"></span>{{ t.label }}</span></sc-for><span style="height:26px;padding:0 9px;border-radius:13px;border:1.5px dashed var(--light1);box-sizing:border-box;display:flex;align-items:center;font-size:11px;color:var(--light1)">+ New tag</span></div></div>
+            <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:11px;color:var(--light1);margin-bottom:4px">Sort · 19 options</span><sc-for list="{{ sorts }}" as="s" hint-placeholder-count="10"><div style="height:24px;border-radius:7px;background:{{ s.bg }};display:flex;align-items:center;justify-content:space-between;padding:0 8px;font-size:12px"><span>{{ s.l }}</span><span>{{ s.mark }}</span></div></sc-for></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="2j" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">2j</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Pokédex · picker mode, teach a TM (中文)</div></div>
+    <div data-screen-label="2j Dex picker" style="width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="dex" lang="zh" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="height:72px;flex:none;display:flex;align-items:center;gap:14px;padding:0 24px;background:color-mix(in oklab, #6390F0 22%, var(--dark1));border-bottom:2px solid #6390F0">
+          <div style="width:40px;height:40px;border-radius:10px;background:repeating-conic-gradient(color-mix(in oklab, var(--light1) 40%, transparent) 0 25%, transparent 0 50%) 0 0/8px 8px"></div>
+          <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:11px;letter-spacing:.1em;color:var(--light1)">选择模式 · #pokedex-filters-title</span><span style="font-size:19px;font-weight:800">选择一只宝可梦来学习「水炮」</span></div>
+          <div style="flex:1"></div>
+          <span style="font-size:12px;color:var(--light1)">可学习 12 只 · 其余已置灰</span>
+          <div style="height:40px;padding:0 16px;border-radius:11px;background:var(--dark2);display:flex;align-items:center;font-size:14px;font-weight:700">取消</div>
+        </div>
+        <div style="padding:14px 20px;display:flex;gap:8px;align-items:center">
+          <div style="width:360px;height:40px;border-radius:12px;background:var(--dark2);display:flex;align-items:center;gap:8px;padding:0 12px;font-size:13px;color:var(--light1)">⌕ 搜索宝可梦</div>
+          <div style="height:40px;padding:0 12px;border-radius:12px;background:var(--light2);color:#36342F;display:flex;align-items:center;font-size:13px;font-weight:700">只看可学习 ✓</div>
+          <div style="height:40px;padding:0 12px;border-radius:12px;background:var(--dark2);display:flex;align-items:center;font-size:13px">筛选</div>
+          <div style="height:40px;padding:0 12px;border-radius:12px;background:var(--dark2);display:flex;align-items:center;font-size:13px">排序：等级 ↓</div>
+        </div>
+        <div style="padding:0 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px;overflow:hidden">
+          <sc-for list="{{ pick }}" as="b" hint-placeholder-count="40">
+            <div style="position:relative;height:120px;border-radius:14px;background:var(--dark2);border:2px solid {{ b.border }};box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;opacity:{{ b.op }};filter:{{ b.filter }}">
+              <div style="width:62px;height:62px;border-radius:12px;background:{{ b.bg }}"></div>
+              <span style="font-size:11px;font-weight:700;max-width:92px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ b.name }}</span>
+              <span style="font-size:10px;color:var(--light1)">{{ b.lv }}</span>
+              <sc-if value="{{ b.hasMark }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-1px;right:-1px;font-size:9px;font-weight:800;background:#6390F0;color:#fff;padding:2px 6px;border-radius:0 12px 0 8px">{{ b.mark }}</span></sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="2k" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">2k</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Pokémon editor · Moves tab, swapping a slot</div></div>
+    <div data-screen-label="2k Pokemon editor" style="width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="dex" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="height:64px;flex:none;display:flex;align-items:center;gap:12px;padding:0 24px;border-bottom:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+          <div style="height:36px;padding:0 12px;border-radius:10px;background:var(--dark2);display:flex;align-items:center;font-size:13px;color:var(--light1)">← Pokédex</div>
+          <div style="font-size:22px;font-weight:800">Pokémon editor</div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--light1)">#pkmn-editor</span>
+          <div style="flex:1"></div>
+          <span style="font-size:12px;color:var(--light1)">Changes save automatically · Esc to close</span>
+        </div>
+        <div style="flex:1;min-height:0;display:grid;grid-template-columns:330px minmax(0,1fr) 330px">
+          <div style="padding:20px;display:flex;flex-direction:column;gap:14px;border-right:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+            <div style="position:relative;height:230px;border-radius:22px;background:color-mix(in oklab, #F7D02C 18%, var(--dark1));display:flex;align-items:center;justify-content:center">
+              <div style="width:192px;height:192px;border-radius:14px;border:1px dashed color-mix(in oklab, var(--light1) 60%, transparent);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--light1)">sprite 192 + decor</div>
+              <span style="position:absolute;top:12px;right:14px;font-size:10px;font-weight:800;background:#A33EA1;color:#fff;padding:2px 6px;border-radius:5px">PKRS</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:26px;font-weight:800">Sparky</span><span style="color:var(--light1)">✎</span><span style="flex:1"></span><span style="font-size:13px;color:var(--light1)">Pikachu · Lv 42</span></div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap"><span style="font-size:11px;font-weight:800;color:#36342F;background:#F7D02C;padding:3px 8px;border-radius:6px">Electric</span><span style="font-size:11px;font-weight:800;color:#fff;background:#4f8cc0;padding:3px 8px;border-radius:6px">B</span><span style="font-size:11px;padding:3px 8px;border-radius:6px;background:var(--dark2)">2 ribbons</span><span style="font-size:11px;padding:3px 8px;border-radius:6px;border:1px dashed var(--light1);color:var(--light1)">+ Add tag</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;height:40px;border-radius:11px;background:var(--dark2);padding:0 12px;font-size:13px"><span>Shiny look <span style="color:#FF4671">✦</span></span><div style="width:40px;height:24px;border-radius:12px;background:var(--accent);position:relative"><div style="position:absolute;right:3px;top:3px;width:18px;height:18px;border-radius:9px;background:#36342F"></div></div></div>
+            <div style="font-size:10.5px;color:var(--light1);margin-top:-8px;padding:0 4px">Look only; the 15% shiny damage bonus stays either way.</div>
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+              <div style="height:38px;border-radius:10px;background:var(--dark2);display:flex;align-items:center;justify-content:center;font-size:12px">Dictionary</div>
+              <div style="height:38px;border-radius:10px;background:var(--dark2);display:flex;align-items:center;justify-content:center;font-size:12px">Star sign</div>
+              <div style="height:38px;border-radius:10px;background:var(--dark2);display:flex;align-items:center;justify-content:center;font-size:12px">Decor</div>
+            </div>
+          </div>
+          <div style="padding:20px 24px;display:flex;flex-direction:column;gap:14px;min-width:0">
+            <div style="display:flex;padding:3px;border-radius:12px;background:color-mix(in oklab, var(--dark1), black 10%);gap:3px;align-self:flex-start">
+              <div style="height:32px;padding:0 18px;border-radius:9px;display:flex;align-items:center;font-size:13px;color:var(--light1)">Overview</div>
+              <div style="height:32px;padding:0 18px;border-radius:9px;display:flex;align-items:center;font-size:13px;color:var(--light1)">Stats</div>
+              <div style="height:32px;padding:0 18px;border-radius:9px;background:var(--light2);color:#36342F;display:flex;align-items:center;font-size:13px;font-weight:800">Moves</div>
+            </div>
+            <div style="font-size:12px;color:var(--light1)">Current moves · click a slot, then a learnt move (or drag a move onto a slot)</div>
+            <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px">
+              <sc-for list="{{ editorSlots }}" as="s" hint-placeholder-count="4">
+                <div style="height:74px;border-radius:14px;border:2px solid {{ s.border }};background:{{ s.bg }};padding:10px 12px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--light1)">{{ s.slot }}</span><span style="font-size:15px;font-weight:800">{{ s.n }}</span><span style="font-size:10px;color:var(--accent)">{{ s.note }}</span></div>
+              </sc-for>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:14px;font-weight:800">Learnt moves · 12</span><div style="height:34px;padding:0 12px;border-radius:10px;background:var(--dark2);display:flex;align-items:center;font-size:12px">Check learnable moves →</div></div>
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+              <sc-for list="{{ learnt }}" as="l" hint-placeholder-count="12">
+                <div style="height:44px;border-radius:11px;background:{{ l.bg }};border:1.5px solid {{ l.border }};display:flex;align-items:center;gap:10px;padding:0 12px;cursor:pointer" style-hover="border-color:var(--light1)"><span style="width:10px;height:10px;border-radius:5px;background:{{ l.c }}"></span><span style="flex:1;font-size:13px">{{ l.n }}</span><span style="font-size:10px;color:var(--light1)">{{ l.mark }}</span></div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="padding:20px;display:flex;flex-direction:column;gap:14px;border-left:1px solid color-mix(in oklab, var(--light1) 28%, transparent);background:var(--dark2)">
+            <div style="display:flex;padding:3px;border-radius:10px;background:var(--dark1);gap:3px"><div style="flex:1;height:28px;border-radius:8px;background:var(--dark2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">Base Stats</div><div style="flex:1;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--light1)">IV's Stats</div></div>
+            <sc-for list="{{ stats }}" as="s" hint-placeholder-count="6"><div style="display:grid;grid-template-columns:36px minmax(0,1fr) 34px;gap:10px;align-items:center"><span style="font-size:12px;color:var(--light1)">{{ s.k }}</span><div style="display:flex;gap:4px"><sc-for list="{{ s.dots }}" as="d" hint-placeholder-count="6"><span style="flex:1;height:8px;border-radius:3px;background:{{ d }}"></span></sc-for></div><span style="font-size:13px;font-weight:700;text-align:right">{{ s.v }}</span></div></sc-for>
+            <div style="font-size:12px;color:var(--light1);margin-top:4px">Evolution</div>
+            <div style="border-radius:11px;background:var(--dark1);padding:10px 12px;font-size:12.5px;line-height:1.5">Unlocks <b>Raichu</b> by using a <b>Thunder Stone</b> at level 30+ <span style="color:rgb(130,211,130)">✔</span></div>
+            <div style="font-size:12px;color:var(--light1)">Signature / egg moves</div>
+            <div style="display:flex;gap:6px"><span style="font-size:12px;padding:4px 10px;border-radius:8px;background:var(--dark1)">Volt Tackle ✔</span><span style="font-size:12px;padding:4px 10px;border-radius:8px;background:var(--dark1);color:var(--light1)">Wish</span></div>
+            <div style="margin-top:auto;height:40px;border-radius:11px;background:var(--dark1);display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:13px">Lore <span style="color:var(--light1)">▾</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="padding:0 72px 72px;display:flex;flex-wrap:wrap;gap:56px;align-items:flex-start">
+  <div id="2l" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">2l</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">VS · Trainers route (next challenger + trainer preview)</div></div>
+    <div data-screen-label="2l VS Trainers" style="width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="vs" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="height:64px;flex:none;display:flex;align-items:center;gap:16px;padding:0 24px;border-bottom:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+          <div style="font-size:22px;font-weight:800">VS</div>
+          <div style="padding:3px;border-radius:12px;background:color-mix(in oklab, var(--dark1), black 10%);display:flex;gap:3px">
+            <div style="height:32px;padding:0 16px;border-radius:9px;background:#465f96;color:#fff;display:flex;align-items:center;font-size:13px;font-weight:700">Trainers</div>
+            <div style="height:32px;padding:0 16px;border-radius:9px;color:var(--light1);display:flex;align-items:center;font-size:13px">Battle Frontier</div>
+            <div style="height:32px;padding:0 16px;border-radius:9px;color:var(--light1);display:flex;align-items:center;gap:6px;font-size:13px">Mega Dimension<svg width="9" height="10" viewBox="0 0 9 10"><rect x="0.5" y="4" width="8" height="5.5" rx="1.2" fill="var(--light1)"></rect><path d="M2.3 4V2.8a2.2 2.2 0 0 1 4.4 0V4" fill="none" stroke="var(--light1)" stroke-width="1.3"></path></svg></div>
+          </div>
+          <div style="flex:1"></div>
+          <div style="width:36px;height:36px;border-radius:18px;background:var(--dark2);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--light1)">?</div>
+        </div>
+        <div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 380px">
+          <div style="padding:22px 28px;display:flex;flex-direction:column;gap:22px;min-width:0">
+            <div style="display:flex;align-items:center;gap:0">
+              <sc-for list="{{ beaten }}" as="b" hint-placeholder-count="7">
+                <div style="display:flex;align-items:center">
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:5px;width:70px"><div style="width:40px;height:40px;border-radius:20px;background:color-mix(in oklab, #465f96 45%, var(--dark1));border:2px solid #465f96;display:flex;align-items:center;justify-content:center;font-size:13px">✓</div><span style="font-size:10.5px;color:var(--light1);white-space:nowrap">{{ b.n }}</span></div>
+                  <div style="width:14px;height:2px;background:#465f96;margin-bottom:18px"></div>
+                </div>
+              </sc-for>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:5px;width:80px"><div style="width:48px;height:48px;border-radius:24px;background:var(--accent);box-shadow:0 0 0 4px color-mix(in oklab, var(--accent) 30%, transparent);display:flex;align-items:center;justify-content:center;color:#36342F;font-weight:800">8</div><span style="font-size:11px;font-weight:800">Next</span></div>
+              <div style="width:14px;height:2px;background:color-mix(in oklab, var(--light1) 35%, transparent);margin-bottom:18px"></div>
+              <sc-for list="{{ future }}" as="f" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center"><div style="display:flex;flex-direction:column;align-items:center;gap:5px;width:60px"><div style="width:40px;height:40px;border-radius:20px;background:#000;opacity:.6"></div><span style="font-size:10.5px;color:var(--light1)">???</span></div></div>
+              </sc-for>
+            </div>
+            <div style="flex:1;display:flex;gap:24px;align-items:stretch">
+              <div style="position:relative;width:420px;border-radius:26px;overflow:hidden;background:var(--dark2);box-shadow:0 0 0 2px var(--accent);display:flex;flex-direction:column">
+                <div style="position:relative;flex:1;background:radial-gradient(circle at 50% 45%, color-mix(in oklab, #465f96 45%, var(--dark2)) 0 35%, transparent 36%), repeating-linear-gradient(135deg, color-mix(in oklab, var(--light1) 10%, transparent) 0 8px, transparent 8px 16px);display:flex;align-items:center;justify-content:center">
+                  <div style="width:200px;height:300px;border-radius:14px;border:1px dashed color-mix(in oklab, var(--light1) 55%, transparent);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--light1)">trainer art</div>
+                </div>
+                <div style="padding:18px 22px;display:flex;flex-direction:column;gap:8px">
+                  <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:28px;font-weight:800">Giovanni</span><span style="font-size:13px;color:var(--light1)">Team Leader</span></div>
+                  <div style="display:flex;gap:6px"><span style="font-size:11px;background:var(--dark1);padding:3px 8px;border-radius:6px">Lv 55</span><span style="font-size:11px;font-weight:800;color:#36342F;background:#E2BF65;padding:3px 8px;border-radius:6px">+ Field Effect</span></div>
+                  <div style="margin-top:6px;height:50px;border-radius:14px;background:var(--accent);color:#36342F;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;box-shadow:0 4px 0 color-mix(in oklab, var(--accent), black 35%)">Challenge →</div>
+                </div>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:12px;justify-content:center">
+                <sc-for list="{{ future }}" as="f" hint-placeholder-count="3">
+                  <div style="height:110px;border-radius:20px;background:var(--dark2);display:flex;align-items:center;gap:16px;padding:0 18px;opacity:.6"><div style="width:64px;height:84px;border-radius:10px;background:#000"></div><div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:18px;font-weight:800">???</span><span style="font-size:12px;color:var(--light1)">Beat Giovanni to reveal</span></div></div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+          <div style="border-left:1px solid color-mix(in oklab, var(--light1) 28%, transparent);background:var(--dark2);padding:16px 18px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:11px;letter-spacing:.14em;color:var(--light1)">INSPECT · TRAINER</span><div style="width:30px;height:30px;border-radius:15px;background:var(--dark1);display:flex;align-items:center;justify-content:center;color:var(--light1);font-size:12px">✕</div></div>
+            <div style="font-size:22px;font-weight:800">Giovanni</div>
+            <div style="font-size:12px;color:var(--light1)">Team</div>
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px"><sc-for list="{{ six }}" as="n" hint-placeholder-count="6"><div style="height:72px;border-radius:12px;background:color-mix(in oklab, #E2BF65 16%, var(--dark1))"></div></sc-for></div>
+            <div style="font-size:12px;color:var(--light1)">Field effect</div>
+            <div style="border-radius:12px;background:var(--dark1);padding:12px;font-size:13px;line-height:1.5"><b>Sandstorm</b> for the whole battle. Rock, Ground and Steel types are unaffected.</div>
+            <div style="font-size:12px;color:var(--light1)">Victory rewards</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap"><span style="font-size:12px;padding:5px 10px;border-radius:8px;background:var(--dark1)">Bottle Cap ×200</span><span style="font-size:12px;padding:5px 10px;border-radius:8px;background:var(--dark1)">Unlocks Battle Frontier</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="2m" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">2m</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">VS · Battle Frontier + Arena card pick</div></div>
+    <div data-screen-label="2m Frontier" style="width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="vs" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="height:64px;flex:none;display:flex;align-items:center;gap:16px;padding:0 24px;border-bottom:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+          <div style="font-size:22px;font-weight:800">VS</div>
+          <div style="padding:3px;border-radius:12px;background:color-mix(in oklab, var(--dark1), black 10%);display:flex;gap:3px">
+            <div style="height:32px;padding:0 16px;border-radius:9px;color:var(--light1);display:flex;align-items:center;font-size:13px">Trainers</div>
+            <div style="height:32px;padding:0 16px;border-radius:9px;background:#964646;color:#fff;display:flex;align-items:center;font-size:13px;font-weight:700">Battle Frontier</div>
+            <div style="height:32px;padding:0 16px;border-radius:9px;color:var(--light1);display:flex;align-items:center;font-size:13px">Mega Dimension</div>
+          </div>
+          <div style="flex:1"></div>
+          <div style="height:32px;padding:0 12px;border-radius:16px;background:var(--dark2);display:flex;align-items:center;gap:6px;font-size:12px;color:var(--light1)">Trainer reset in <b style="color:var(--light2)">11:04:52</b></div>
+        </div>
+        <div style="padding:22px 28px;display:flex;flex-direction:column;gap:20px">
+          <div style="height:92px;border-radius:20px;background:linear-gradient(90deg, color-mix(in oklab, #964646 55%, var(--dark2)), var(--dark2));display:flex;align-items:center;gap:18px;padding:0 24px">
+            <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:11px;letter-spacing:.14em;color:var(--light2);opacity:.8">CURRENT LEAGUE</span><span style="font-size:26px;font-weight:800">Great League · Division ≤ B</span></div>
+            <div style="flex:1"></div>
+            <div style="height:32px;padding:0 12px;border-radius:16px;background:rgba(0,0,0,.3);display:flex;align-items:center;gap:6px;font-size:12px">Rotation <b>2/4</b> · next league in <b>3d 04:10</b></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
+            <div style="height:200px;border-radius:22px;background:var(--dark2);padding:18px;display:flex;flex-direction:column;gap:8px"><div style="flex:1;border-radius:14px;background:repeating-linear-gradient(135deg, color-mix(in oklab, var(--light1) 12%, transparent) 0 6px, transparent 6px 12px);display:flex;align-items:flex-end;padding:10px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--light1)">tower art</div><div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:20px;font-weight:800">Battle Tower</span><span style="font-size:12px;color:var(--light1)">Highest floor <b style="color:var(--light2)">23</b></span></div></div>
+            <div style="height:200px;border-radius:22px;background:var(--dark2);padding:18px;display:flex;flex-direction:column;gap:8px"><div style="flex:1;border-radius:14px;background:repeating-linear-gradient(135deg, color-mix(in oklab, var(--light1) 12%, transparent) 0 6px, transparent 6px 12px);display:flex;align-items:flex-end;padding:10px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--light1)">factory art</div><div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:20px;font-weight:800">Battle Factory</span><span style="font-size:12px;color:var(--light1)">High score <b style="color:var(--light2)">1,840</b></span></div></div>
+            <div style="height:200px;border-radius:22px;background:var(--dark2);padding:18px;display:flex;flex-direction:column;gap:8px;box-shadow:0 0 0 2px var(--accent)"><div style="flex:1;border-radius:14px;background:repeating-linear-gradient(135deg, color-mix(in oklab, var(--light1) 12%, transparent) 0 6px, transparent 6px 12px);display:flex;align-items:flex-end;padding:10px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--light1)">arena art</div><div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:20px;font-weight:800">Battle Arena</span><span style="font-size:12px;color:var(--light1)">Defeated <b style="color:var(--light2)">2/5</b></span></div></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:16px;font-weight:800">Battle Arena · pick a field card</span><span style="font-size:12px;color:var(--light1)">Harder cards stack more field effects</span></div>
+          <div style="display:flex;gap:20px;align-items:flex-end;padding-top:10px">
+            <sc-for list="{{ arenaCards }}" as="a" hint-placeholder-count="3">
+              <div style="width:230px;height:250px;border-radius:20px;background:var(--dark2);border:2px solid {{ a.c }};box-shadow:{{ a.ring }};transform:{{ a.lift }};padding:16px;box-sizing:border-box;display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;justify-content:space-between"><span style="font-size:13px;color:var(--light1)">{{ a.t }}</span><span style="color:var(--accent)">{{ a.d }}</span></div>
+                <div style="flex:1;border-radius:12px;background:color-mix(in oklab, {{ a.c }} 18%, var(--dark1))"></div>
+                <sc-for list="{{ a.fxs }}" as="x" hint-placeholder-count="2"><div style="height:26px;border-radius:8px;background:var(--dark1);display:flex;align-items:center;padding:0 10px;font-size:12px">{{ x.f }}</div></sc-for>
+              </div>
+            </sc-for>
+            <div style="flex:1"></div>
+            <div style="height:50px;padding:0 26px;border-radius:14px;background:var(--accent);color:#36342F;display:flex;align-items:center;font-size:16px;font-weight:800;box-shadow:0 4px 0 color-mix(in oklab, var(--accent), black 35%)">Challenge with Card II →</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="2n" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">2n</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">VS · Mega Dimension (portal grid)</div></div>
+    <div data-screen-label="2n Mega Dimension" style="width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="vs" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;background:radial-gradient(ellipse at 50% 60%, color-mix(in oklab, var(--dark1), #1b1030 55%), color-mix(in oklab, var(--dark1), black 55%))">
+        <div style="height:64px;flex:none;display:flex;align-items:center;gap:16px;padding:0 24px;border-bottom:1px solid color-mix(in oklab, var(--light1) 20%, transparent)">
+          <div style="font-size:22px;font-weight:800">VS</div>
+          <div style="padding:3px;border-radius:12px;background:rgba(0,0,0,.3);display:flex;gap:3px">
+            <div style="height:32px;padding:0 16px;border-radius:9px;color:var(--light1);display:flex;align-items:center;font-size:13px">Trainers</div>
+            <div style="height:32px;padding:0 16px;border-radius:9px;color:var(--light1);display:flex;align-items:center;font-size:13px">Battle Frontier</div>
+            <div style="height:32px;padding:0 16px;border-radius:9px;background:var(--light2);color:#36342F;display:flex;align-items:center;font-size:13px;font-weight:700">Mega Dimension</div>
+          </div>
+          <div style="flex:1"></div>
+          <div style="height:32px;padding:0 12px;border-radius:16px;background:rgba(0,0,0,.35);display:flex;align-items:center;gap:6px;font-size:12px;color:var(--light1)">Rift rotation in <b style="color:var(--light2)">2d 18:30</b></div>
+        </div>
+        <div style="flex:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:24px;padding:36px 48px">
+          <sc-for list="{{ portals }}" as="p" hint-placeholder-count="8">
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer">
+              <div style="position:relative;width:170px;height:170px;border-radius:85px;background:{{ p.core }};box-shadow:{{ p.glow }};display:flex;align-items:center;justify-content:center">
+                <div style="width:80px;height:80px;border-radius:10px;border:1px dashed color-mix(in oklab, var(--light2) 45%, transparent);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--light1)">mega</div>
+              </div>
+              <span style="font-size:15px;font-weight:800">{{ p.n }}</span>
+              <span style="font-size:13px;color:var(--accent);letter-spacing:.1em">{{ p.s }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="padding:0 24px 18px;font-size:11px;color:var(--light1)">Portals rotate slowly (CSS, disabled under prefers-reduced-motion). Locked during battle. #dimension-menu #dimension-listing</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="2o" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">2o</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Items / Bag (中文)</div></div>
+    <div data-screen-label="2o Bag zh" style="width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="bag" lang="zh" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="height:64px;flex:none;display:flex;align-items:center;gap:14px;padding:0 24px;border-bottom:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+          <div style="font-size:22px;font-weight:800">背包</div>
+          <div style="display:flex;gap:6px"><sc-for list="{{ bagCats }}" as="c" hint-placeholder-count="8"><div style="height:34px;padding:0 12px;border-radius:10px;background:{{ c.bg }};color:{{ c.fg }};display:flex;align-items:center;gap:6px;font-size:13px;font-weight:{{ c.w }}"><span style="width:14px;height:14px;border-radius:3px;background:repeating-conic-gradient(color-mix(in oklab, currentColor 50%, transparent) 0 25%, transparent 0 50%) 0 0/5px 5px"></span>{{ c.l }}</div></sc-for></div>
+        </div>
+        <div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 380px">
+          <div style="padding:18px 22px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));grid-auto-rows:120px;gap:10px;align-content:start">
+            <sc-for list="{{ bagItems }}" as="i" hint-placeholder-count="16">
+              <div style="position:relative;border-radius:16px;background:{{ i.bg }};border:1.5px solid {{ i.border }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer" style-hover="background:color-mix(in oklab, var(--dark2), white 6%)">
+                <div style="width:48px;height:48px;border-radius:10px;background:repeating-conic-gradient(color-mix(in oklab, var(--light1) 40%, transparent) 0 25%, transparent 0 50%) 0 0/8px 8px"></div>
+                <span style="font-size:13px;font-weight:700">{{ i.n }}</span>
+                <span style="position:absolute;right:10px;top:8px;font-size:11px;color:var(--light1);font-variant-numeric:tabular-nums">{{ i.c }}</span>
+                <sc-if value="{{ i.isNew }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:10px;top:8px;font-size:9px;font-weight:800;background:var(--accent);color:#36342F;padding:1px 5px;border-radius:4px">NEW</span></sc-if>
+              </div>
+            </sc-for>
+          </div>
+          <div style="border-left:1px solid color-mix(in oklab, var(--light1) 28%, transparent);background:var(--dark2);padding:16px 18px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:11px;letter-spacing:.14em;color:var(--light1)">查看 · 道具</span><div style="width:30px;height:30px;border-radius:15px;background:var(--dark1);display:flex;align-items:center;justify-content:center;color:var(--light1);font-size:12px">✕</div></div>
+            <div style="border-radius:16px;padding:18px;background:var(--dark1);display:flex;gap:14px;align-items:center"><div style="width:64px;height:64px;border-radius:12px;background:repeating-conic-gradient(color-mix(in oklab, var(--light1) 40%, transparent) 0 25%, transparent 0 50%) 0 0/8px 8px"></div><div style="display:flex;flex-direction:column;gap:5px"><span style="font-size:22px;font-weight:800">吃剩的东西</span><span style="font-size:11px;background:var(--dark2);padding:2px 8px;border-radius:6px;align-self:flex-start">持有物 · 拥有 ×3</span></div></div>
+            <div style="font-family:system-ui,sans-serif;font-size:14px;line-height:1.6">携带后，每回合会稍微回复 HP。</div>
+            <div style="font-size:12px;color:var(--light1)">携带中</div>
+            <div style="display:flex;gap:6px"><div style="height:48px;width:48px;border-radius:12px;background:color-mix(in oklab, #A8A77A 20%, var(--dark1))"></div><div style="height:48px;width:48px;border-radius:12px;background:color-mix(in oklab, #7AC74C 20%, var(--dark1))"></div></div>
+            <div style="margin-top:auto;height:44px;border-radius:12px;background:var(--light2);color:#36342F;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">交给宝可梦…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="2p" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">2p</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Poké-Mart · quantity popover</div></div>
+    <div data-screen-label="2p Poke-Mart" style="position:relative;width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="mart" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="height:64px;flex:none;display:flex;align-items:center;gap:14px;padding:0 24px;border-bottom:1px solid color-mix(in oklab, var(--light1) 28%, transparent)">
+          <div style="font-size:22px;font-weight:800">Poké-Mart</div>
+          <div style="flex:1"></div>
+          <div style="height:36px;padding:0 14px;border-radius:18px;background:var(--dark2);display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700"><span style="width:16px;height:16px;border-radius:8px;background:#b9b9c6"></span>12,480 <span style="font-size:11px;color:var(--light1);font-weight:400">Bottle Caps</span></div>
+          <div style="height:36px;padding:0 14px;border-radius:18px;background:var(--dark2);display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700"><span style="width:16px;height:16px;border-radius:8px;background:#e7c14a"></span>36 <span style="font-size:11px;color:var(--light1);font-weight:400">Golden</span></div>
+        </div>
+        <div style="height:52px;flex:none;display:flex;align-items:center;gap:4px;padding:0 20px;border-bottom:1px solid color-mix(in oklab, var(--light1) 20%, transparent)">
+          <sc-for list="{{ martCats }}" as="c" hint-placeholder-count="10"><div style="height:34px;padding:0 13px;border-radius:10px;background:{{ c.bg }};color:{{ c.fg }};display:flex;align-items:center;font-size:13px;font-weight:600">{{ c.l }}</div></sc-for>
+        </div>
+        <div style="padding:20px 24px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px">
+          <sc-for list="{{ products }}" as="p" hint-placeholder-count="8">
+            <div style="height:180px;border-radius:18px;background:var(--dark2);box-shadow:{{ p.ring }};padding:16px;box-sizing:border-box;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+              <div style="flex:1;display:flex;align-items:center;justify-content:center"><div style="width:56px;height:56px;border-radius:10px;background:repeating-conic-gradient(color-mix(in oklab, var(--light1) 40%, transparent) 0 25%, transparent 0 50%) 0 0/8px 8px"></div></div>
+              <span style="font-size:15px;font-weight:800">{{ p.n }}</span>
+              <div style="display:flex;align-items:center;gap:6px;font-size:13px"><span style="width:12px;height:12px;border-radius:6px;background:{{ p.coin }}"></span>{{ p.p }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="position:absolute;left:calc(232px + 24px + (100% - 232px - 48px - 42px) / 4 + 14px);top:340px;width:300px;border-radius:18px;background:var(--light2);color:#36342F;padding:16px;box-sizing:border-box;box-shadow:0 20px 50px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:16px;font-weight:800">Buy Life Orb</span><span style="font-size:11px;opacity:.6">Owned ×1</span></div>
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px"><sc-for list="{{ qty }}" as="q" hint-placeholder-count="6"><div style="height:36px;border-radius:9px;background:{{ q.bg }};color:{{ q.fg }};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">{{ q.q }}</div></sc-for></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span>Total</span><b style="font-variant-numeric:tabular-nums">15,000 · not enough</b></div>
+        <div style="height:42px;border-radius:11px;background:rgba(54,52,47,.25);color:rgba(54,52,47,.55);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">Buy ×10</div>
+        <div style="font-size:11px;opacity:.65;margin-top:-4px">Disabled state: the total is over your balance.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="padding:0 72px 96px;display:flex;flex-wrap:wrap;gap:56px;align-items:flex-start">
+  <div id="2q" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">2q</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Generic pieces · popups, toasts, states, scrollbars</div></div>
+    <div data-screen-label="2q Generic pieces" style="width:1440px;border-radius:14px;background:var(--dark1);padding:32px;box-sizing:border-box;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:11px;letter-spacing:.14em;color:var(--light1)">CONFIRM · #tooltipBox, background click disabled</div>
+        <div style="border-radius:22px;background:var(--dark2);padding:22px;display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 50px rgba(0,0,0,.45)">
+          <div style="font-size:20px;font-weight:800">Wipe all data?</div>
+          <div style="font-family:system-ui,sans-serif;font-size:14px;line-height:1.5;color:var(--light1)">This deletes your save for good. Export it first if you might want it back.</div>
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:6px"><div style="height:42px;padding:0 18px;border-radius:11px;background:var(--dark1);display:flex;align-items:center;font-size:14px">Cancel</div><div style="height:42px;padding:0 18px;border-radius:11px;background:rgb(206,83,83);color:#fff;display:flex;align-items:center;font-size:14px;font-weight:800">Yeah!</div></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:11px;letter-spacing:.14em;color:var(--light1)">HELP · from a page's ? button</div>
+        <div style="border-radius:22px;background:var(--dark2);padding:22px;display:flex;flex-direction:column;gap:10px;box-shadow:0 20px 50px rgba(0,0,0,.45)">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:20px;font-weight:800">Wild Areas</span><span style="width:30px;height:30px;border-radius:15px;background:var(--dark1);display:flex;align-items:center;justify-content:center;color:var(--light1);font-size:12px">✕</span></div>
+          <div style="font-family:system-ui,sans-serif;font-size:14px;line-height:1.55">Wild Pokémon here can be caught. Areas rotate every day; the pill shows when the next rotation starts.</div>
+          <div style="font-size:11px;color:var(--light1)">Esc / Space / click outside closes</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:11px;letter-spacing:.14em;color:var(--light1)">TOASTS · bottom-center, 3s, stack of 3</div>
+        <div style="height:48px;border-radius:14px;background:var(--light2);color:#36342F;display:flex;align-items:center;gap:10px;padding:0 16px;font-size:14px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.4)"><span style="width:10px;height:10px;border-radius:5px;background:rgb(90,170,90)"></span>Game saved<span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;opacity:.6">S</span></div>
+        <div style="height:48px;border-radius:14px;background:var(--dark2);border:1.5px solid rgb(206,83,83);display:flex;align-items:center;gap:10px;padding:0 16px;font-size:14px"><span style="width:10px;height:10px;border-radius:5px;background:rgb(206,83,83)"></span>Complete the tutorial first</div>
+        <div style="height:48px;border-radius:14px;background:var(--dark2);border:1.5px solid var(--light1);display:flex;align-items:center;gap:10px;padding:0 16px;font-size:14px"><span style="width:10px;height:10px;border-radius:5px;background:var(--light1)"></span>Pick an area in Travel or VS first</div>
+        <div style="height:48px;border-radius:14px;background:var(--dark2);border:1.5px solid #FF4671;display:flex;align-items:center;gap:10px;padding:0 16px;font-size:14px"><span style="width:10px;height:10px;border-radius:5px;background:#FF4671"></span>A shiny Pidgey joined your box ✦</div>
+      </div>
+      <div style="grid-column:span 2;display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:11px;letter-spacing:.14em;color:var(--light1)">BUTTON STATES</div>
+        <div style="display:grid;grid-template-columns:90px repeat(5,minmax(0,1fr));gap:10px;align-items:center">
+          <span></span><sc-for list="{{ btnStates }}" as="s" hint-placeholder-count="5"><span style="font-size:11px;color:var(--light1)">{{ s.l }}</span></sc-for>
+          <span style="font-size:12px">Primary</span><sc-for list="{{ btnStates }}" as="s" hint-placeholder-count="5"><div style="height:42px;border-radius:12px;background:var(--accent);color:#36342F;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;filter:{{ s.f }};opacity:{{ s.o }};box-shadow:{{ s.r }}">Save and Go!</div></sc-for>
+          <span style="font-size:12px">Secondary</span><sc-for list="{{ btnStates }}" as="s" hint-placeholder-count="5"><div style="height:42px;border-radius:12px;background:var(--dark2);display:flex;align-items:center;justify-content:center;font-size:14px;filter:{{ s.f }};opacity:{{ s.o }};box-shadow:{{ s.r }}">Auto-Build</div></sc-for>
+          <span style="font-size:12px">Danger</span><sc-for list="{{ btnStates }}" as="s" hint-placeholder-count="5"><div style="height:42px;border-radius:12px;border:1.5px solid rgb(206,83,83);color:rgb(230,130,130);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;filter:{{ s.f }};opacity:{{ s.o }};box-shadow:{{ s.r }}">Leave battle</div></sc-for>
+          <span style="font-size:12px">Nav row</span><sc-for list="{{ btnStates }}" as="s" hint-placeholder-count="5"><div style="height:34px;border-radius:9px;background:var(--dark2);display:flex;align-items:center;padding:0 10px;font-size:13px;filter:{{ s.f }};opacity:{{ s.o }};box-shadow:{{ s.r }}">Poké-Mart</div></sc-for>
+        </div>
+        <div style="font-size:11px;color:var(--light1)">Focus ring = 2px --accent with a 3px --dark1 gap, keyboard focus only (:focus-visible). Disabled = 40% opacity + grayscale + not-allowed cursor; tooltip explains why.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:11px;letter-spacing:.14em;color:var(--light1)">SCROLLBAR · inputs</div>
+        <div style="display:flex;gap:14px">
+          <div style="flex:1;height:170px;border-radius:14px;background:var(--dark2);position:relative;padding:12px 20px 12px 12px;box-sizing:border-box;display:flex;flex-direction:column;gap:6px;overflow:hidden">
+            <div style="height:26px;border-radius:7px;background:var(--dark1)"></div><div style="height:26px;border-radius:7px;background:var(--dark1)"></div><div style="height:26px;border-radius:7px;background:var(--dark1)"></div><div style="height:26px;border-radius:7px;background:var(--dark1)"></div><div style="height:26px;border-radius:7px;background:var(--dark1)"></div>
+            <div style="position:absolute;right:5px;top:8px;bottom:8px;width:6px;border-radius:3px;background:color-mix(in oklab, var(--light1) 15%, transparent)"><div style="height:40%;margin-top:18px;border-radius:3px;background:color-mix(in oklab, var(--light1) 60%, transparent)"></div></div>
+          </div>
+          <div style="width:140px;font-size:11px;line-height:1.5;color:var(--light1)">6px thumb, --light1 at 60%, track at 15%, no arrows. scrollbar-width: thin + ::-webkit-scrollbar.</div>
+        </div>
+        <div style="height:40px;border-radius:12px;background:var(--dark2);box-shadow:0 0 0 2px var(--accent);display:flex;align-items:center;padding:0 12px;font-size:13px">Team 1 · Main<span style="width:1.5px;height:18px;background:var(--light2);margin-left:2px"></span></div>
+        <div style="display:flex;gap:14px;align-items:center;font-size:13px"><div style="width:40px;height:24px;border-radius:12px;background:var(--accent);position:relative"><div style="position:absolute;right:3px;top:3px;width:18px;height:18px;border-radius:9px;background:#36342F"></div></div>On<div style="width:40px;height:24px;border-radius:12px;background:var(--dark2);position:relative"><div style="position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:9px;background:var(--light1)"></div></div>Off</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="2r" style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;background:#ffe15e;color:#36342F;padding:3px 8px;border-radius:6px">2r</div><div style="font-size:17px;font-weight:700;color:#ECDEB7">Idle home · click the logo, or no battle running</div></div>
+    <div data-screen-label="2r Idle home" style="width:1440px;height:900px;border-radius:14px;overflow:hidden;background:var(--dark1);display:flex;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <dc-import name="WebSidebar" active="home" rewards="some" hint-size="232px,100%" style="height:100%;flex:none"></dc-import>
+      <div style="position:relative;flex:1;min-width:0;overflow:hidden;background:repeating-linear-gradient(45deg, color-mix(in oklab, var(--light1) 6%, transparent) 0 2px, transparent 2px 22px)">
+        <div style="position:absolute;right:24px;top:20px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--light1)">#bg-pattern · .pkmn-walk (count grows with collection) · rare UFO 20:00–20:30</div>
+        <sc-for list="{{ walkers }}" as="w" hint-placeholder-count="10">
+          <div style="position:absolute;left:{{ w.x }}px;top:{{ w.y }}px;display:flex;flex-direction:column;align-items:center"><div style="width:{{ w.s }}px;height:{{ w.s }}px;border-radius:6px;border:1px dashed color-mix(in oklab, var(--light2) 40%, transparent)"></div><div style="width:28px;height:6px;border-radius:50%;background:rgba(0,0,0,.35);margin-top:2px"></div></div>
+        </sc-for>
+        <div style="position:absolute;left:48px;top:56px;display:flex;flex-direction:column;gap:18px;width:560px">
+          <div style="font-size:44px;font-weight:800;line-height:1.05">Nothing running.<br>Where to next?</div>
+          <div style="display:flex;gap:10px">
+            <div style="height:50px;padding:0 22px;border-radius:14px;background:var(--accent);color:#36342F;display:flex;align-items:center;gap:10px;font-size:16px;font-weight:800;box-shadow:0 4px 0 color-mix(in oklab, var(--accent), black 35%)">Travel <span style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:.6">1</span></div>
+            <div style="height:50px;padding:0 22px;border-radius:14px;background:var(--dark2);display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700">VS <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--light1)">2</span></div>
+          </div>
+        </div>
+        <div style="position:absolute;left:48px;right:48px;bottom:40px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px">
+          <div style="border-radius:18px;background:var(--dark2);padding:16px 18px;display:flex;flex-direction:column;gap:4px"><span style="font-size:11px;letter-spacing:.12em;color:var(--light1)">WILD ROTATION</span><span style="font-size:20px;font-weight:800;font-variant-numeric:tabular-nums">06:42:11</span><span style="font-size:12px;color:var(--light1)">until areas rotate · 2/5</span></div>
+          <div style="border-radius:18px;background:var(--dark2);padding:16px 18px;display:flex;flex-direction:column;gap:4px;box-shadow:inset 0 0 0 1.5px #FF4671"><span style="font-size:11px;letter-spacing:.12em;color:var(--light1)">REWARDS</span><span style="font-size:20px;font-weight:800">2 to claim</span><span style="font-size:12px;color:var(--light1)">Mystery Gift · Wonder Trade</span></div>
+          <div style="border-radius:18px;background:var(--dark2);padding:16px 18px;display:flex;flex-direction:column;gap:4px"><span style="font-size:11px;letter-spacing:.12em;color:var(--light1)">CURRENT EVENT</span><span style="font-size:20px;font-weight:800">Primeval Wilds</span><span style="font-size:12px;color:var(--light1)">Events tab · rotation 3/6</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#94886B">Tiles only show data the game already has (rotation timer, claimable rewards, current event). A tile is hidden when it has nothing to show.</div>
+  </div>
+</div></x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;default&quot;,&quot;dark&quot;,&quot;verdant&quot;,&quot;lilac&quot;,&quot;cherry&quot;,&quot;onyx&quot;,&quot;coral&quot;,&quot;oled&quot;,&quot;halloween&quot;],&quot;default&quot;:&quot;default&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  componentDidMount() { this.applyTheme(); }
+  componentDidUpdate() { this.applyTheme(); }
+  applyTheme() {
+    const T = {
+      default: ['#36342F', '#444138', '#94886B', '#ECDEB7'], dark: ['#26252a', '#313036', '#7f7d8a', '#e2e0ea'],
+      verdant: ['#2B3530', '#36433B', '#7F9A84', '#D5EBD3'], lilac: ['#332F3D', '#3F3A4C', '#8E86A8', '#E3DCF5'],
+      cherry: ['#3A2E31', '#4A3A3E', '#A07F86', '#F4DCE0'], onyx: ['#222325', '#2E2F32', '#7D8086', '#E4E5E8'],
+      coral: ['#3A302C', '#4B3D37', '#A8887A', '#F6DDD0'], oled: ['#000000', '#141414', '#6E6E6E', '#E8E8E8'],
+      halloween: ['#241E2B', '#33283A', '#9A6FA8', '#FFB65C']
+    };
+    const t = T[this.props.theme] || T.default, s = document.body.style;
+    ['--dark1', '--dark2', '--light1', '--light2'].forEach((k, i) => s.setProperty(k, t[i]));
+  }
+  renderVals() {
+    const C = { normal: '#A8A77A', fire: '#EE8130', water: '#6390F0', electric: '#F7D02C', grass: '#7AC74C', ice: '#96D9D6', fighting: '#C22E28', poison: '#A33EA1', ground: '#E2BF65', flying: '#A98FF3', psychic: '#F95587', bug: '#A6B91A', rock: '#B6A136', ghost: '#735797', dragon: '#6F35FC', dark: '#705746', steel: '#B7B7CE', fairy: '#D685AD' };
+    const hpC = h => h > 60 ? 'rgb(130,211,130)' : h > 30 ? 'rgb(221,168,99)' : 'rgb(219,112,112)';
+    const DIV = { D: '#7d7a70', C: '#6f9a5c', B: '#4f8cc0', A: '#8d6fd0', S: '#d49a2e', SS: '#d4604f', SSS: '#c93f6e' };
+    const muted = 'color-mix(in oklab, var(--light1) 25%, transparent)';
+    const tint = (c, p = 22) => `color-mix(in oklab, ${c} ${p}%, var(--dark1))`;
+    const mv = (name, type, fill = 0, meta = '') => ({ name, color: C[type], fill, fillBg: C[type] + '55', meta, glow: fill === 100 ? `0 0 18px ${C[type]}88` : 'none' });
+    const B = [['Bulbasaur', 'grass'], ['Charmander', 'fire'], ['Squirtle', 'water'], ['Pikachu', 'electric'], ['Eevee', 'normal'], ['Gastly', 'ghost'], ['Machop', 'fighting'], ['Geodude', 'rock'], ['Abra', 'psychic'], ['Dratini', 'dragon'], ['Magnemite', 'steel'], ['Clefairy', 'fairy'], ['Zubat', 'poison'], ['Sandshrew', 'ground'], ['Pidgey', 'flying'], ['Caterpie', 'bug'], ['Sneasel', 'dark'], ['Swinub', 'ice'], ['Totodile', 'water'], ['Chikorita', 'grass'], ['Cyndaquil', 'fire'], ['Mareep', 'electric'], ['Larvitar', 'rock'], ['Riolu', 'fighting'], ['Gible', 'dragon'], ['Ralts', 'psychic'], ['Aron', 'steel'], ['Snorunt', 'ice'], ['Poochyena', 'dark'], ['Shinx', 'electric'], ['Piplup', 'water'], ['Turtwig', 'grass'], ['Litten', 'fire'], ['Froakie', 'water'], ['Rowlet', 'grass'], ['Mimikyu', 'ghost'], ['Lapras', 'water'], ['Snorlax', 'normal'], ['Seel', 'water'], ['Horsea', 'water']];
+    const divs = ['D', 'C', 'B', 'C', 'A', 'B', 'D', 'S'];
+    const tagCols = [null, '#FF4671', null, null, '#7ed0f0', null, null, null, '#ffe15e', null];
+    const canLearn = t => ['water', 'ice', 'normal', 'dragon'].includes(t);
+    const box = B.map(([name, t], i) => ({ name, type: t, color: C[t], bg: tint(C[t], 18), lv: 'Lv ' + (8 + (i * 13) % 88), shiny: i % 9 === 3, tag: tagCols[i % 10] || 'transparent', div: divs[i % 8], divBg: DIV[divs[i % 8]] }));
+    const pick = box.map(b => ({ ...b, op: canLearn(b.type) ? 1 : 0.28, filter: canLearn(b.type) ? 'none' : 'grayscale(1)', border: canLearn(b.type) ? 'color-mix(in oklab, #6390F0 70%, transparent)' : 'transparent', mark: canLearn(b.type) ? '可学习' : '', hasMark: canLearn(b.type) }));
+    const team = [
+      { name: 'Pikachu', lv: 42, type: 'electric', hp: 79, active: true, mv: ['electric', 'normal', 'steel', 'electric'] },
+      { name: 'Greninja', lv: 40, type: 'water', hp: 92, mv: ['water', 'dark', 'ice', 'normal'] },
+      { name: 'Torterra', lv: 38, type: 'grass', hp: 54, mv: ['grass', 'ground', 'rock', 'normal'] },
+      { name: 'Incineroar', lv: 39, type: 'fire', hp: 0, fainted: true, mv: ['fire', 'dark', 'fighting', 'normal'] },
+      { name: 'Gengar', lv: 41, type: 'ghost', hp: 24, mv: ['ghost', 'poison', 'psychic', 'dark'] },
+      { name: 'Dragonite', lv: 44, type: 'dragon', hp: 100, mv: ['dragon', 'flying', 'normal', 'fire'] }
+    ];
+    const teamRows = team.map(p => ({ name: p.name, lvText: p.fainted ? 'Fainted' : 'Lv ' + p.lv, hp: p.hp, hpColor: hpC(p.hp), color: C[p.type],
+      bg: p.active ? 'color-mix(in oklab, var(--dark2), white 6%)' : 'var(--dark2)', border: p.active ? 'var(--accent)' : 'transparent', filter: p.fainted ? 'grayscale(1)' : 'none', op: p.fainted ? 0.45 : 1,
+      moves: p.mv.map((t, i) => p.active && i < 2 ? C[t] : 'color-mix(in oklab, ' + C[t] + ' 35%, var(--dark1))') }));
+    const types = Object.keys(C);
+    const chip = (label, on, color) => ({ label, bg: on ? (color || 'var(--light2)') : 'var(--dark1)', fg: on ? '#36342F' : 'var(--light2)', border: on ? 'transparent' : (color ? color : 'color-mix(in oklab, var(--light1) 40%, transparent)') });
+    const zhTickets = [['#0000', '野生动物园', '3 常见 · 1 少见 · 1 稀有'], ['#0012', '常青森林', 'Lv 5–12 · 已全部捕获'], ['#0015', '月见山', 'Lv 12–18 · 全部闪光 ✦'], ['#0021', '双子岛', 'Lv 28–36'], ['#0022', '华蓝洞窟外围', 'Lv 30–38'], ['#0024', '狩猎平原', '在对战中击败道馆馆主小霞后解锁']];
+    return {
+      shortcuts: [
+        { keys: ['1–6'], label: 'Travel · VS · Battle · Team · Items · Pokédex', src: 'new', srcColor: 'var(--accent)' },
+        { keys: ['S'], label: 'Save game', src: 'game', srcColor: 'var(--light1)' },
+        { keys: ['Esc'], label: 'Close inspector / popup', src: 'game', srcColor: 'var(--light1)' },
+        { keys: ['Space'], label: 'Close inspector / popup', src: 'game', srcColor: 'var(--light1)' },
+        { keys: ['⌫'], label: 'Back one inspector level', src: 'new', srcColor: 'var(--accent)' },
+        { keys: ['/'], label: 'Focus search (Pokédex, Dictionary)', src: 'new', srcColor: 'var(--accent)' },
+        { keys: ['?'], label: 'Show this list', src: 'new', srcColor: 'var(--accent)' }
+      ],
+      ticketsZh: zhTickets.map(([no, name, sub], i) => ({ no, name, sub, ring: i === 1 ? '0 0 0 2px var(--accent)' : 'none' })),
+      tenMons: Array.from({ length: 10 }, (_, i) => ({ bg: i === 9 ? 'var(--dark1)' : 'color-mix(in oklab, var(--light2) 9%, var(--dark1))' })),
+      nine: Array.from({ length: 9 }, (_, i) => ({ i })),
+      six: Array.from({ length: 6 }, (_, i) => ({ i })),
+      btnStates: [['Default', 'none', 1, 'none'], ['Hover', 'brightness(1.08)', 1, 'none'], ['Focus', 'none', 1, '0 0 0 3px var(--dark1), 0 0 0 5px var(--accent)'], ['Pressed', 'brightness(.92)', 1, 'none'], ['Disabled', 'grayscale(1)', 0.4, 'none']].map(([l, f, o, r]) => ({ l, f, o, r })),
+      wildEnemyMoves: [mv('Gust', 'flying'), mv('Quick Attack', 'normal'), mv('Wing Attack', 'flying'), mv('Sand Attack', 'ground')],
+      activeMoves: [mv('Thunderbolt', 'electric', 100, 'Special · 90'), mv('Quick Attack', 'normal', 62, 'Physical · 40'), mv('Iron Tail', 'steel', 0, 'Physical · 100'), mv('Volt Tackle', 'electric', 0, 'Physical · 120')],
+      teamRows, balls: team.map(p => ({ c: p.fainted ? muted : 'rgb(219,112,112)' })),
+      resultItems: [['Oran Berry', '×12', false], ['Silver Powder', '×1', true], ['TM · Bug Buzz', '×1', true], ['Exp. Candy', '×5', false], ['Bottle Cap', '×40', false], ['Apricorn', '×2', false]].map(([n, c, isNew]) => ({ n, c, isNew, border: isNew ? 'var(--accent)' : 'transparent' })),
+      resultMons: [['Caterpie', 'bug', false], ['Pidgey', 'flying', true], ['Pikachu', 'electric', false]].map(([n, t, s]) => ({ n, bg: tint(C[t]), shiny: s })),
+      damage: [['Pikachu', 38, 'electric'], ['Greninja', 24, 'water'], ['Dragonite', 17, 'dragon'], ['Gengar', 12, 'ghost'], ['Torterra', 9, 'grass'], ['Incineroar', 0, 'fire']].map(([n, p, t]) => ({ n, p, w: Math.max(p, 1), c: C[t] })),
+      box: box.slice(0, 30), boxWide: box, pick: pick.slice(0, 40),
+      teamSlots: team.slice(0, 5).map((p, i) => ({ n: '#0' + (i + 1), name: p.name, lv: 'Lv ' + p.lv, bg: tint(C[p.type]), moves: p.mv.map(t => C[t]) })),
+      typeChips: types.map(t => chip(t[0].toUpperCase() + t.slice(1), t === 'water' || t === 'ice', C[t])),
+      levelChips: ['1–20', '20–40', '40–60', '60–80', '80–100'].map((l, i) => chip(l, i === 2)),
+      divChips: ['D', 'C', 'B', 'A', 'S', 'SS', 'SSS'].map((l, i) => chip(l, i >= 2)),
+      shinyChips: ['Shiny', 'Not shiny', 'Has star sign', 'All star signs'].map((l, i) => chip(l, false)),
+      abilityChips: ['Common', 'Uncommon', 'Rare', 'Hidden locked'].map((l) => chip(l, false)),
+      extraChips: ['Signature move', 'Egg move', 'Has ribbon', 'Not evolved', 'Evolves by level'].map((l, i) => chip(l, i === 0)),
+      tagChips: [['Favourites', '#FF4671'], ['Raid team', '#7ed0f0'], ['Breeding', '#ffe15e']].map(([l, c]) => ({ label: l, c })),
+      sorts: ['Level', 'Total stats', 'Base HP', 'Base Atk', 'Base Def', 'Base SpA', 'Base SpD', 'Base Spe', 'IV total', 'IV HP'].map((l, i) => ({ l, on: i === 1, bg: i === 1 ? 'var(--dark1)' : 'transparent', mark: i === 1 ? '↓' : '' })),
+      learnt: [['Thunderbolt', 'electric', 1], ['Quick Attack', 'normal', 1], ['Iron Tail', 'steel', 1], ['Volt Tackle', 'electric', 1], ['Thunder Wave', 'electric', 0], ['Spark', 'electric', 0], ['Nuzzle', 'electric', 0], ['Double Team', 'normal', 0], ['Slam', 'normal', 0], ['Discharge', 'electric', 0], ['Play Rough', 'fairy', 0], ['Brick Break', 'fighting', 0]].map(([n, t, eq], i) => ({ n, c: C[t], eq: !!eq, bg: i === 9 ? 'color-mix(in oklab, var(--accent) 18%, var(--dark1))' : 'var(--dark1)', border: i === 9 ? 'var(--accent)' : 'transparent', mark: eq ? 'equipped' : i === 9 ? 'selected' : '' })),
+      editorSlots: [['Thunderbolt', 'electric'], ['Quick Attack', 'normal'], ['Iron Tail', 'steel'], ['Volt Tackle', 'electric']].map(([n, t], i) => ({ n, c: C[t], slot: 'Slot ' + (i + 1), border: i === 2 ? 'var(--accent)' : C[t], bg: i === 2 ? 'color-mix(in oklab, var(--accent) 14%, var(--dark1))' : 'var(--dark1)', note: i === 2 ? 'Swap with Discharge?' : '' })),
+      stats: [['HP', 4, 168], ['Atk', 3, 102], ['Def', 2, 84], ['SpA', 4, 118], ['SpD', 3, 96], ['Spe', 5, 148]].map(([k, n, v]) => ({ k, v, dots: Array.from({ length: 6 }, (_, i) => i < n ? 'var(--light2)' : muted) })),
+      beaten: ['Brock', 'Misty', 'Lt. Surge', 'Erika', 'Koga', 'Sabrina', 'Blaine'].map(n => ({ n })),
+      future: [1, 2, 3].map(i => ({ i })),
+      arenaCards: [
+        { t: 'Card I', d: '★', fx: ['Sunny'], c: '#EE8130' },
+        { t: 'Card II', d: '★★', fx: ['Trick Room', 'Stealth Rock'], c: '#735797', sel: true },
+        { t: 'Card III', d: '★★★', fx: ['Hail', 'Light Screen', 'Wonder Room'], c: '#96D9D6' }
+      ].map(a => ({ ...a, fxs: a.fx.map(f => ({ f })), ring: a.sel ? '0 0 0 3px var(--accent), 0 20px 40px rgba(0,0,0,.4)' : 'none', lift: a.sel ? 'translateY(-10px)' : 'none' })),
+      portals: [['Mega Venusaur', '★', 'grass'], ['Mega Charizard X', '★★', 'dragon'], ['Mega Blastoise', '★', 'water'], ['Mega Gengar', '★★★', 'ghost'], ['Mega Lucario', '★★', 'fighting'], ['Mega Gardevoir', '★★★', 'fairy'], ['Mega Rayquaza', '★★★★', 'dragon'], ['Mega Metagross', '★★★★', 'steel']].map(([n, s, t]) => ({ n, s, glow: `0 0 0 2px ${C[t]}, 0 0 40px ${C[t]}66`, core: `radial-gradient(circle, #000 35%, ${C[t]}55 60%, transparent 72%)` })),
+      bagCats: [['持有物', 1], ['进化', 0], ['招式学习器', 0], ['记忆碟', 0], ['树果', 0], ['宝石', 0], ['装饰', 0], ['重要物品', 0]].map(([l, on]) => ({ l, bg: on ? 'var(--light2)' : 'var(--dark2)', fg: on ? '#36342F' : 'var(--light2)', w: on ? 800 : 500 })),
+      bagItems: [['电气球', 1, 0], ['讲究围巾', 2, 0], ['气势披带', 1, 1], ['吃剩的东西', 3, 0], ['生命宝珠', 1, 0], ['突击背心', 1, 1], ['讲究眼镜', 2, 0], ['达人带', 1, 0], ['先制之爪', 4, 0], ['黑色污泥', 1, 0], ['光粉', 2, 0], ['王者之证', 1, 0], ['凸凸头盔', 1, 0], ['弱点保险', 3, 0], ['广角镜', 1, 0], ['焦点镜', 2, 0]].map(([n, c, isNew], i) => ({ n, c: '×' + c, isNew: !!isNew, bg: i === 3 ? 'color-mix(in oklab, var(--accent) 14%, var(--dark2))' : 'var(--dark2)', border: i === 3 ? 'var(--accent)' : 'transparent' })),
+      martCats: ['Goods', 'Held', 'Evolution', "TM's", 'Genetics', 'Pokemon', 'Memory', 'Decor', 'Restaurant', 'Exchange'].map((l, i) => ({ l, bg: i === 1 ? 'var(--light2)' : 'transparent', fg: i === 1 ? '#36342F' : 'var(--light2)' })),
+      products: [['Choice Scarf', 1200, 0], ['Life Orb', 1500, 0], ['Focus Sash', 900, 0], ['Leftovers', 1100, 0], ['Assault Vest', 1300, 0], ['Expert Belt', 800, 0], ['Weakness Policy', 20, 1], ['Rocky Helmet', 700, 0]].map(([n, p, g], i) => ({ n, p: p.toLocaleString('en-US'), coin: g ? '#e7c14a' : '#b9b9c6', ring: i === 1 ? '0 0 0 2px var(--accent)' : 'none' })),
+      qty: ['×1', '×5', '×10', '×25', '×50', '×100'].map((q, i) => ({ q, bg: i === 2 ? 'var(--light2)' : 'var(--dark1)', fg: i === 2 ? '#36342F' : 'var(--light2)' })),
+      walkers: [[80, 300, 44], [220, 420, 36], [380, 330, 52], [540, 460, 40], [700, 310, 48], [860, 440, 36], [160, 540, 40], [480, 580, 44], [780, 560, 52], [960, 360, 40]].map(([x, y, s]) => ({ x, y, s }))
+    };
+  }
+}
+</script>
+</body>
+</html>
